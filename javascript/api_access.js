@@ -1,4 +1,4 @@
-const apiURL = 'https://c9i2ztstv8.execute-api.us-east-2.amazonaws.com/'
+const apiURL = 'https://z3v2iubne2.execute-api.us-east-2.amazonaws.com/beta'
 
 const postData = async (data) => {
   try {
@@ -7,5 +7,5 @@ const postData = async (data) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify({}),
     });
