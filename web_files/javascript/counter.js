@@ -1,11 +1,7 @@
-// Allowed Origins:
-  // http://jacehickman.com.s3-website.us-east-2.amazonaws.com/
-  // jacehickman.com
-  // www.jacehickman.com
-
 // Update the counter element by sending a POST request to AWS API
 // API will execute a python script in lambda
 // Lamda will increment a database value a provide the new value to the counter
+
 const apiURL = 'https://z3v2iubne2.execute-api.us-east-2.amazonaws.com/beta'
 const updateCounter = async () => {
   try {
