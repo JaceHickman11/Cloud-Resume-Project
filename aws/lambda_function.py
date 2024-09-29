@@ -15,12 +15,11 @@ def lambda_handler(event, context):
     
     if item:
 # Increment visitor_count
-        new_value = item['visitor_count'] + 1
+        new_value = int(item['visitor_count']) + 1
         table.update_item(
             Key={
                 'visitor_id': 0
             },
-# :val is a placeholder for new_value
             UpdateExpression='SET visitor_count = :val',
             ExpressionAttributeValues={
 # Set :val to new_value
@@ -30,7 +29,10 @@ def lambda_handler(event, context):
 # Return the updated value
         return {
             'statusCode': 200,
-            'body': f'Updated visitor_count: {new_value}'
+            'headers': {
+                'Access-Control-Allow-Origin': '*',
+            },
+            'body': json.dumps({'Updated visitor_count': new_value})
         }
 # Return an error if item isn't found
     else:
