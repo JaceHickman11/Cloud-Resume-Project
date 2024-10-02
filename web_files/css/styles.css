@@ -41,6 +41,15 @@ header a:hover {
   text-decoration: underline;
 }
 
+a {
+  color: #00aaff;
+  font-weight: 400;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
 div {
   margin: 30px auto; 
   padding: 0px;

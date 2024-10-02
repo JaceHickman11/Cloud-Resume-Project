@@ -19,7 +19,25 @@
     <h2><u>Summary</u></h2>
       <p>Systems Administrator with an active Top Secret clearance and 9+ years experience supporting DoD and FBI projects. Holds a B.S. in IT and certifications in CompTIA Security+, LPI Linux Essentials, and AWS Cloud Practitioner. Skilled in deploying, maintaining, and troubleshooting diverse systems ensuring a robust IT infrastructure. Developing expertise in RHEL administration and automation.</p>
    </div>
-  
+
+  <div>
+  <h2><u>Personal Projects</u></h2>
+  <p>This website! Developed and deployed a personal website <a href="https://jacehickman.com">jacehickman.com</a> utilizing Amazon Web Services. The front and backend code that created this project can be found here: <a href="https://github.com/JaceHickman11">github.com/JaceHickman11</a></p>
+  <p>This project was inspired by the <a href="https://cloudresumechallenge.dev/docs/the-challenge/aws/">Cloud Resume Challenge</a></p>
+ <ul>
+    <li>S3 - Hosts the web files HTML, CSS, and Javascript</li>
+    <li>Route 53 - DNS, route any http request to the https site. Purchased the domain with this service as well.</li>
+    <li>CloudFront - Content delivery, it ensures web content is given to the user at the closest AWS edge location to them.</li>
+    <li>API Gateway - API creation to access my Lambda function and DynamoDB table in AWS</li>
+    <li>DyanmoDB - The website has a "Page Views" in the top left. The current count is stored in a simple table using this service</li> 
+    <li>Lambda - Serverless computing platform. I host the lambda_function.py here. When the site is loaded, Javascript sends a POST request to the API which triggers the Lambda function. The function accesses my table in DynamoDB, increments the "Page Views:" count, and reports the updated value to the website.</li> 
+    <li>DyanmoDB - The website has a "Page Views" in the top left. The current count is stored in a simple table using this service</li> 
+    <li>DyanmoDB - The website has a "Page Views" in the top left. The current count is stored in a simple table using this service</li> 
+    <li>DyanmoDB - The website has a "Page Views" in the top left. The current count is stored in a simple table using this service</li> 
+  </ul>
+  <p>I'm currently focused on making this project Infrastructure as Code (IaC) using Terraform, step 12 of the challenge</p>
+</div>
+
  <div>
   <h2><u>Work Experience</u></h2>
   <h3>Systems Administrator II</h3>
