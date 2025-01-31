@@ -1,0 +1,235 @@
+{
+  "version": 4,
+  "terraform_version": "1.9.6",
+  "serial": 3,
+  "lineage": "23bf6f0e-1771-3488-15f5-5bbaaf4de866",
+  "outputs": {
+    "aws_api_gateway_rest_api_all": {
+      "value": "{\"api_key_source\":\"HEADER\",\"arn\":\"arn:aws:apigateway:us-east-2::/restapis/z3v2iubne2\",\"binary_media_types\":[],\"description\":\"\",\"endpoint_configuration\":[{\"types\":[\"REGIONAL\"],\"vpc_endpoint_ids\":[]}],\"execution_arn\":\"arn:aws:execute-api:us-east-2:338253790412:z3v2iubne2\",\"id\":\"z3v2iubne2\",\"minimum_compression_size\":\"\",\"name\":\"CloudResumeAPI\",\"policy\":\"\",\"root_resource_id\":\"by9gf2juxc\",\"tags\":{}}",
+      "type": "string"
+    },
+    "aws_cloudfront_all": {
+      "value": "{\"aliases\":[\"jacehickman.com\",\"www.jacehickman.com\"],\"arn\":\"arn:aws:cloudfront::338253790412:distribution/E3EERE5S6HGZEH\",\"domain_name\":\"d16yo3slw8eg5m.cloudfront.net\",\"enabled\":true,\"etag\":\"E2CAX8QRO2T0HR\",\"hosted_zone_id\":\"Z2FDTNDATAQYW2\",\"id\":\"E3EERE5S6HGZEH\",\"in_progress_validation_batches\":0,\"last_modified_time\":\"2023-02-23 02:49:20.377 +0000 UTC\",\"status\":\"Deployed\",\"tags\":{},\"web_acl_id\":\"\"}",
+      "type": "string"
+    },
+    "aws_dynamodb_table_all": {
+      "value": "{\"arn\":\"arn:aws:dynamodb:us-east-2:338253790412:table/VisitorTable\",\"attribute\":[{\"name\":\"visitor_id\",\"type\":\"N\"}],\"billing_mode\":\"PROVISIONED\",\"deletion_protection_enabled\":false,\"global_secondary_index\":[],\"hash_key\":\"visitor_id\",\"id\":\"VisitorTable\",\"local_secondary_index\":[],\"name\":\"VisitorTable\",\"point_in_time_recovery\":[{\"enabled\":false}],\"range_key\":null,\"read_capacity\":1,\"replica\":[],\"server_side_encryption\":[],\"stream_arn\":\"\",\"stream_enabled\":false,\"stream_label\":\"\",\"stream_view_type\":\"\",\"table_class\":\"STANDARD\",\"tags\":{},\"ttl\":[{\"attribute_name\":\"\",\"enabled\":false}],\"write_capacity\":1}",
+      "type": "string"
+    },
+    "aws_lambda_function_all": {
+      "value": "{\"architectures\":[\"x86_64\"],\"arn\":\"arn:aws:lambda:us-east-2:338253790412:function:updateItem\",\"code_sha256\":\"fouFH8eo5V6HceLodo3X3NUSKOhfMNOO2SCslAnrPeU=\",\"code_signing_config_arn\":\"\",\"dead_letter_config\":[],\"description\":\"\",\"environment\":[],\"ephemeral_storage\":[{\"size\":512}],\"file_system_config\":[],\"function_name\":\"updateItem\",\"handler\":\"lambda_function.lambda_handler\",\"id\":\"updateItem\",\"image_uri\":\"\",\"invoke_arn\":\"arn:aws:apigateway:us-east-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-2:338253790412:function:updateItem/invocations\",\"kms_key_arn\":\"\",\"last_modified\":\"2024-09-28T06:00:27.000+0000\",\"layers\":[],\"logging_config\":[{\"application_log_level\":\"\",\"log_format\":\"Text\",\"log_group\":\"/aws/lambda/updateItem\",\"system_log_level\":\"\"}],\"memory_size\":128,\"qualified_arn\":\"arn:aws:lambda:us-east-2:338253790412:function:updateItem:$LATEST\",\"qualified_invoke_arn\":\"arn:aws:apigateway:us-east-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-2:338253790412:function:updateItem:$LATEST/invocations\",\"qualifier\":null,\"reserved_concurrent_executions\":-1,\"role\":\"arn:aws:iam::338253790412:role/VisitorCounter_Role\",\"runtime\":\"python3.10\",\"signing_job_arn\":\"\",\"signing_profile_version_arn\":\"\",\"source_code_hash\":\"fouFH8eo5V6HceLodo3X3NUSKOhfMNOO2SCslAnrPeU=\",\"source_code_size\":583,\"tags\":{},\"timeout\":3,\"tracing_config\":[{\"mode\":\"PassThrough\"}],\"version\":\"$LATEST\",\"vpc_config\":[]}",
+      "type": "string"
+    },
+    "aws_route53_all": {
+      "value": "{\"arn\":\"arn:aws:route53:::hostedzone/Z07797793UO05BKPV64D2\",\"caller_reference\":\"RISWorkflow-RD:802ff4c3-fcc1-4a54-9e12-dd19ffda1e1e\",\"comment\":\"HostedZone created by Route53 Registrar\",\"id\":\"Z07797793UO05BKPV64D2\",\"linked_service_description\":null,\"linked_service_principal\":null,\"name\":\"jacehickman.com\",\"name_servers\":[\"ns-1708.awsdns-21.co.uk\",\"ns-1323.awsdns-37.org\",\"ns-458.awsdns-57.com\",\"ns-990.awsdns-59.net\"],\"primary_name_server\":\"ns-1708.awsdns-21.co.uk\",\"private_zone\":false,\"resource_record_set_count\":7,\"tags\":{},\"vpc_id\":null,\"zone_id\":\"Z07797793UO05BKPV64D2\"}",
+      "type": "string"
+    },
+    "s3_bucket_all": {
+      "value": "{\"arn\":\"arn:aws:s3:::jacehickman.com\",\"bucket\":\"jacehickman.com\",\"bucket_domain_name\":\"jacehickman.com.s3.amazonaws.com\",\"bucket_regional_domain_name\":\"jacehickman.com.s3.us-east-2.amazonaws.com\",\"hosted_zone_id\":\"Z2O1EMRO9K5GLX\",\"id\":\"jacehickman.com\",\"region\":\"us-east-2\",\"website_domain\":\"s3-website.us-east-2.amazonaws.com\",\"website_endpoint\":\"jacehickman.com.s3-website.us-east-2.amazonaws.com\"}",
+      "type": "string"
+    }
+  },
+  "resources": [
+    {
+      "mode": "data",
+      "type": "aws_cloudfront_distribution",
+      "name": "my_distribution",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "aliases": [
+              "jacehickman.com",
+              "www.jacehickman.com"
+            ],
+            "arn": "arn:aws:cloudfront::338253790412:distribution/E3EERE5S6HGZEH",
+            "domain_name": "d16yo3slw8eg5m.cloudfront.net",
+            "enabled": true,
+            "etag": "E2CAX8QRO2T0HR",
+            "hosted_zone_id": "Z2FDTNDATAQYW2",
+            "id": "E3EERE5S6HGZEH",
+            "in_progress_validation_batches": 0,
+            "last_modified_time": "2023-02-23 02:49:20.377 +0000 UTC",
+            "status": "Deployed",
+            "tags": {},
+            "web_acl_id": ""
+          },
+          "sensitive_attributes": []
+        }
+      ]
+    },
+    {
+      "mode": "data",
+      "type": "aws_dynamodb_table",
+      "name": "visitor_table",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:dynamodb:us-east-2:338253790412:table/VisitorTable",
+            "attribute": [
+              {
+                "name": "visitor_id",
+                "type": "N"
+              }
+            ],
+            "billing_mode": "PROVISIONED",
+            "deletion_protection_enabled": false,
+            "global_secondary_index": [],
+            "hash_key": "visitor_id",
+            "id": "VisitorTable",
+            "local_secondary_index": [],
+            "name": "VisitorTable",
+            "point_in_time_recovery": [
+              {
+                "enabled": false
+              }
+            ],
+            "range_key": null,
+            "read_capacity": 1,
+            "replica": [],
+            "server_side_encryption": [],
+            "stream_arn": "",
+            "stream_enabled": false,
+            "stream_label": "",
+            "stream_view_type": "",
+            "table_class": "STANDARD",
+            "tags": {},
+            "ttl": [
+              {
+                "attribute_name": "",
+                "enabled": false
+              }
+            ],
+            "write_capacity": 1
+          },
+          "sensitive_attributes": []
+        }
+      ]
+    },
+    {
+      "mode": "data",
+      "type": "aws_lambda_function",
+      "name": "updateItem_py",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "architectures": [
+              "x86_64"
+            ],
+            "arn": "arn:aws:lambda:us-east-2:338253790412:function:updateItem",
+            "code_sha256": "fouFH8eo5V6HceLodo3X3NUSKOhfMNOO2SCslAnrPeU=",
+            "code_signing_config_arn": "",
+            "dead_letter_config": [],
+            "description": "",
+            "environment": [],
+            "ephemeral_storage": [
+              {
+                "size": 512
+              }
+            ],
+            "file_system_config": [],
+            "function_name": "updateItem",
+            "handler": "lambda_function.lambda_handler",
+            "id": "updateItem",
+            "image_uri": "",
+            "invoke_arn": "arn:aws:apigateway:us-east-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-2:338253790412:function:updateItem/invocations",
+            "kms_key_arn": "",
+            "last_modified": "2024-09-28T06:00:27.000+0000",
+            "layers": [],
+            "logging_config": [
+              {
+                "application_log_level": "",
+                "log_format": "Text",
+                "log_group": "/aws/lambda/updateItem",
+                "system_log_level": ""
+              }
+            ],
+            "memory_size": 128,
+            "qualified_arn": "arn:aws:lambda:us-east-2:338253790412:function:updateItem:$LATEST",
+            "qualified_invoke_arn": "arn:aws:apigateway:us-east-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-2:338253790412:function:updateItem:$LATEST/invocations",
+            "qualifier": null,
+            "reserved_concurrent_executions": -1,
+            "role": "arn:aws:iam::338253790412:role/VisitorCounter_Role",
+            "runtime": "python3.10",
+            "signing_job_arn": "",
+            "signing_profile_version_arn": "",
+            "source_code_hash": "fouFH8eo5V6HceLodo3X3NUSKOhfMNOO2SCslAnrPeU=",
+            "source_code_size": 583,
+            "tags": {},
+            "timeout": 3,
+            "tracing_config": [
+              {
+                "mode": "PassThrough"
+              }
+            ],
+            "version": "$LATEST",
+            "vpc_config": []
+          },
+          "sensitive_attributes": []
+        }
+      ]
+    },
+    {
+      "mode": "data",
+      "type": "aws_route53_zone",
+      "name": "dns",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:route53:::hostedzone/Z07797793UO05BKPV64D2",
+            "caller_reference": "RISWorkflow-RD:802ff4c3-fcc1-4a54-9e12-dd19ffda1e1e",
+            "comment": "HostedZone created by Route53 Registrar",
+            "id": "Z07797793UO05BKPV64D2",
+            "linked_service_description": null,
+            "linked_service_principal": null,
+            "name": "jacehickman.com",
+            "name_servers": [
+              "ns-1708.awsdns-21.co.uk",
+              "ns-1323.awsdns-37.org",
+              "ns-458.awsdns-57.com",
+              "ns-990.awsdns-59.net"
+            ],
+            "primary_name_server": "ns-1708.awsdns-21.co.uk",
+            "private_zone": false,
+            "resource_record_set_count": 7,
+            "tags": {},
+            "vpc_id": null,
+            "zone_id": "Z07797793UO05BKPV64D2"
+          },
+          "sensitive_attributes": []
+        }
+      ]
+    },
+    {
+      "mode": "data",
+      "type": "aws_s3_bucket",
+      "name": "my_bucket",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:s3:::jacehickman.com",
+            "bucket": "jacehickman.com",
+            "bucket_domain_name": "jacehickman.com.s3.amazonaws.com",
+            "bucket_regional_domain_name": "jacehickman.com.s3.us-east-2.amazonaws.com",
+            "hosted_zone_id": "Z2O1EMRO9K5GLX",
+            "id": "jacehickman.com",
+            "region": "us-east-2",
+            "website_domain": "s3-website.us-east-2.amazonaws.com",
+            "website_endpoint": "jacehickman.com.s3-website.us-east-2.amazonaws.com"
+          },
+          "sensitive_attributes": []
+        }
+      ]
+    }
+  ],
+  "check_results": null
+}
