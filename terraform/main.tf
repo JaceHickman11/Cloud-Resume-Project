@@ -5,6 +5,19 @@
 # terraform show - show details of a created resource
 # terraform destroy - destroys the configuration
 #
+# Commands to import my resources
+# terraform import aws_s3_bucket.primary_bucket jacehickman.com
+# terraform import aws_s3_bucket.www_bucket www.jacehickman.com
+# terraform import aws_cloudfront_distribution.s3_distribution E3EERE5S6HGZEH
+# terraform import aws_route53_zone.my_dns Z07797793UO05BKPV64D2
+# terraform import aws_dynamodb_table.visitor_table VisitorTable
+# terraform import aws_api_gateway_rest_api.api z3v2iubne2
+# terraform import aws_lambda_function.updateItem_py updateItem
+# terraform import aws_iam_role.table_role VisitorCounter_Role
+# terraform import aws_s3_bucket_cors_configuration.primary_bucket_cors jacehickman.com
+# terraform import aws_s3_bucket_policy.primary_bucket_policy jacehickman.com
+# terraform import aws_s3_bucket_policy.www_bucket_policy www.jacehickman.com
+#
 terraform {
   required_providers {
     aws = {
@@ -19,11 +32,94 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "primary_bucket" {
-    bucket = "jacehickman.com"
+  bucket = "jacehickman.com"
+  force_destroy  = true
+}
+
+resource "aws_s3_bucket_website_configuration" "primary_website" {
+  bucket = aws_s3_bucket.primary_bucket.id
+
+  index_document {
+    suffix = "resume.html"  
+  }
+
+  error_document {
+    key = "error.html" 
+  }
+}
+
+resource "aws_s3_bucket_public_access_block" "primary_public_access" {
+  bucket = aws_s3_bucket.primary_bucket.id
+  block_public_acls       = false
+  block_public_policy     = false
+  ignore_public_acls      = false
+  restrict_public_buckets = false
+}
+
+resource "aws_s3_bucket_policy" "primary_bucket_policy" {
+  bucket = aws_s3_bucket.primary_bucket.id
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Sid       = "PublicReadGetObject",         
+        Effect    = "Allow",                   
+        Principal = "*",                           
+        Action    = "s3:GetObject",                
+        Resource  = "${aws_s3_bucket.primary_bucket.arn}/*" 
+      }
+    ]
+  })
+}
+
+resource "aws_s3_bucket_cors_configuration" "primary_bucket_cors" {
+  bucket = aws_s3_bucket.primary_bucket.id
+
+  cors_rule {
+    allowed_headers = ["*"]
+    allowed_methods = ["GET", "POST"]
+    allowed_origins = [
+      "http://www.jacehickman.com",
+      "https://www.jacehickman.com"
+    ]
+    expose_headers  = []
+  }
 }
 
 resource "aws_s3_bucket" "www_bucket" {
-    bucket = "www.jacehickman.com"
+  bucket = "www.jacehickman.com"
+}
+
+resource "aws_s3_bucket_website_configuration" "www_website" {
+  bucket = aws_s3_bucket.www_bucket.id
+  redirect_all_requests_to {
+    host_name = "jacehickman.com"  
+    protocol  = "https"           
+  }
+}
+
+resource "aws_s3_bucket_public_access_block" "www_public_access" {
+  bucket = aws_s3_bucket.www_bucket.id
+  block_public_acls       = false
+  block_public_policy     = false
+  ignore_public_acls      = false
+  restrict_public_buckets = false
+}
+
+resource "aws_s3_bucket_policy" "www_bucket_policy" {
+  bucket = aws_s3_bucket.www_bucket.id
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Sid       = "PublicReadGetObject",         
+        Effect    = "Allow",                   
+        Principal = "*",                           
+        Action    = "s3:GetObject",                
+        Resource  = "${aws_s3_bucket.www_bucket.arn}/*" 
+      }
+    ]
+  })
 }
 
 resource "aws_cloudfront_distribution" "s3_distribution" {
@@ -88,6 +184,108 @@ resource "aws_api_gateway_rest_api" "api" {
   name = "CloudResumeAPI"
 }
 
+resource "aws_api_gateway_method" "post_method" {
+  rest_api_id   = aws_api_gateway_rest_api.api.id
+  resource_id   = aws_api_gateway_rest_api.api.root_resource_id
+  http_method   = "POST"
+  authorization = "NONE"
+}
+
+resource "aws_api_gateway_integration" "lambda_integration" {
+  rest_api_id             = aws_api_gateway_rest_api.api.id
+  resource_id             = aws_api_gateway_rest_api.api.root_resource_id
+  http_method             = aws_api_gateway_method.post_method.http_method
+  integration_http_method = "POST"
+  type                    = "AWS_PROXY"
+  uri                     = aws_lambda_function.updateItem_py.invoke_arn
+}
+
+resource "aws_api_gateway_method_response" "post_response" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  resource_id = aws_api_gateway_rest_api.api.root_resource_id
+  http_method = aws_api_gateway_method.post_method.http_method
+  status_code = "200"
+
+  response_models = {
+    "application/json" = "Empty"
+  }
+}
+
+resource "aws_api_gateway_integration_response" "post_integration_response" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  resource_id = aws_api_gateway_rest_api.api.root_resource_id
+  http_method = aws_api_gateway_method.post_method.http_method
+  status_code = "200"
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Origin" = "'*'"
+  }
+}
+
+resource "aws_lambda_permission" "apigw_lambda" {
+  statement_id  = "AllowAPIGatewayInvoke"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.updateItem_py.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_api_gateway_rest_api.api.execution_arn}/*/*"
+}
+
+resource "aws_api_gateway_method" "options_method" {
+  rest_api_id   = aws_api_gateway_rest_api.api.id
+  resource_id   = aws_api_gateway_rest_api.api.root_resource_id
+  http_method   = "OPTIONS"
+  authorization = "NONE"
+}
+
+resource "aws_api_gateway_integration" "options_mock" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  resource_id = aws_api_gateway_rest_api.api.root_resource_id
+  http_method = aws_api_gateway_method.options_method.http_method
+  type        = "MOCK"
+
+  request_templates = {
+    "application/json" = "{\"statusCode\": 200}"
+  }
+}
+
+resource "aws_api_gateway_method_response" "options_response" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  resource_id = aws_api_gateway_rest_api.api.root_resource_id
+  http_method = aws_api_gateway_method.options_method.http_method
+  status_code = "200"
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Headers" = true
+    "method.response.header.Access-Control-Allow-Methods" = true
+    "method.response.header.Access-Control-Allow-Origin"  = true
+  }
+
+  response_models = {
+    "application/json" = "Empty"
+  }
+}
+
+resource "aws_api_gateway_integration_response" "options_mock_response" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  resource_id = aws_api_gateway_rest_api.api.root_resource_id
+  http_method = aws_api_gateway_method.options_method.http_method
+  status_code = "200"
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+    "method.response.header.Access-Control-Allow-Methods" = "'POST,OPTIONS'"
+    "method.response.header.Access-Control-Allow-Origin"  = "'*'"
+  }
+}
+
+resource "aws_api_gateway_deployment" "api_deployment" {
+  depends_on = [
+    aws_api_gateway_integration.lambda_integration,
+    aws_api_gateway_integration.options_mock
+  ]
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  stage_name  = "beta"
+}
 
 # IAM Role for Lambda Execution
 resource "aws_iam_role" "table_role" {
@@ -121,16 +319,6 @@ resource "aws_lambda_function" "updateItem_py" {
     }
   }
 }
-
-# Commands to import my resources
-# terraform import aws_s3_bucket.primary_bucket jacehickman.com
-# terraform import aws_s3_bucket.www_bucket www.jacehickman.com
-# terraform import aws_cloudfront_distribution.s3_distribution E3EERE5S6HGZEH
-# terraform import aws_route53_zone.my_dns Z07797793UO05BKPV64D2
-# terraform import aws_dynamodb_table.visitor_table VisitorTable
-# terraform import aws_api_gateway_rest_api.api z3v2iubne2
-# terraform import aws_lambda_function.updateItem_py updateItem
-# terraform import aws_iam_role.table_role VisitorCounter_Role
 
 # data blocks only access the resource
 # data "aws_resource type" "resource_reference"
