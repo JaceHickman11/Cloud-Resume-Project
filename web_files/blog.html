@@ -15,7 +15,7 @@
   <div>
     <h2>Cloud Resume Challenge</h2>
     <h3>Overview:</h3>
-    <p>This challenge asks you deploy a website as IaC hosted on a Cloud Provider of your choice. I went with Amazon Web Service and Terraform</p>
+    <p>This challenge asks you deploy a website as IaC hosted on a Cloud Provider of your choice. I went with Amazon Web Services and Terraform.</p>
     <p><a href="https://cloudresumechallenge.dev/docs/the-challenge/aws/">https://cloudresumechallenge.dev/docs/the-challenge/aws/</a></p>
   </div>
 
@@ -33,7 +33,7 @@
     <h3>4-6. Static Website, HTTPS & DNS (S3 and Route53):</h3>
     <p>This is where the challenge really began. The web files are hosted on AWS S3 and I'd never interacted with it before. This part was fairly straightforward. AWS has great documentation and I generally followed the steps detailed here: <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/website-hosting-custom-domain-walkthrough.html">S3 Hosting Guide</a></p>
     <p>I created two buckets named jacehickman.com and www.jacehickman.com respectively. I configured them for public access and static website hosting.</p>
-    <p>The challenge then asks you to use HTTPS for security. Security sounded great to me. Leaned on AWS documentation for this piece as well: <a href="https://aws.amazon.com/premiumsupport/knowledge-center/cloudfront-https-requests-s3/">CloudFront HTTPS Setup/a></p>
+    <p>The challenge then asks you to use HTTPS for security. Security sounded great to me. Leaned on AWS documentation for this piece as well: <a href="https://aws.amazon.com/premiumsupport/knowledge-center/cloudfront-https-requests-s3/">CloudFront HTTPS Setup</a></p>
     <p>I obtained a certificate and edited the CloudFront Distribution behavior policy to redirect HTTP traffic to HTTPS.</p>
     <p>For DNS, I used Route53 to purchase my domain and made 7 DNS records in total. In short, all traffic is routed to https://jacehickman.com.</p>
   </div>
