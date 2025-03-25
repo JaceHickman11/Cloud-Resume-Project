@@ -1,3 +1,8 @@
+# This is the function placed into Lambda
+# It's in /terraform/lambda.zip
+# main.tf takes this and places the function into Lambda
+    # See resource "aws_lambda_function" "updateItem_py" in main.tf
+
 import json
 import boto3
 

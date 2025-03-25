@@ -59,7 +59,13 @@
     <h3>Hiatus & Return:</h3>
     <p>I actually put down the project for some time at this step because I landed my first IT job and was learning a ton at work. I moved from Helpdesk > Systems Administrator > Another Systems Administrator role > to my current role as an Automation Engineer. I learned all sorts of stuff along the way like Ansible, Git, Linux, and CI/CD Pipelines so I didn't feel the need to press on with the project.</p>
     <p>Eventually, work exposed me to Terraform and I considered picking it back up to learn since I knew Terraform was right around the corner for this project. After that hiatus, I decided to finish the project but found some difficulty because I had to relearn everything I pieced together but, fortunately had much more knowledge.</p>
-  </div>
+    <p>I immediately put all my files into GitHub (I had them locally, lol), I also installed the LiveServer plugin for vscode so I could see my site before deploying it easier.</p>
+    <p>I rewrote my Javascript code and got it to send a request to my API finally but was blocked by CORS, I vaguely remembered being stuck here before I put it down.</p>
+    <p>Turns out I never even configured CORS on my API so it was just blocking everything by default. I configured CORS to accept everything and moved on.</p>
+    <p>The API response was nesting my lambda response in it's own body so I was struggling to access the visitor_count.</p>
+    <p>This ended up being a problem with the API, I changed the integration request content handling to "passthrough" so Lambda passed as is, instead of as is the my API tossing some extra nesting on it.</p>
+    <p>The website was basically completed at this point, a little sore on the eyes maybe but it was done. Now to completely "restart" and write it all as IaC.</p>
+ </div>
 
   <div>
     <h3>12. Infrastructure as Code (Terraform):</h3>
