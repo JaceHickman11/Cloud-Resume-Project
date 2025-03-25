@@ -8,15 +8,27 @@
 # Commands to import my resources
 # terraform import aws_s3_bucket.primary_bucket jacehickman.com
 # terraform import aws_s3_bucket.www_bucket www.jacehickman.com
-# terraform import aws_cloudfront_distribution.s3_distribution E3EERE5S6HGZEH
-# terraform import aws_route53_zone.my_dns Z07797793UO05BKPV64D2
-# terraform import aws_dynamodb_table.visitor_table VisitorTable
-# terraform import aws_api_gateway_rest_api.api z3v2iubne2
-# terraform import aws_lambda_function.updateItem_py updateItem
-# terraform import aws_iam_role.table_role VisitorCounter_Role
+# terraform import aws_s3_bucket.tf_state terraform-state-jacehickman
 # terraform import aws_s3_bucket_cors_configuration.primary_bucket_cors jacehickman.com
 # terraform import aws_s3_bucket_policy.primary_bucket_policy jacehickman.com
 # terraform import aws_s3_bucket_policy.www_bucket_policy www.jacehickman.com
+# terraform import aws_cloudfront_distribution.s3_distribution E3EERE5S6HGZEH
+# terraform import aws_route53_zone.my_dns Z07797793UO05BKPV64D2
+# terraform import aws_dynamodb_table.visitor_table VisitorTable
+# terraform import aws_lambda_function.updateItem_py updateItem
+# terraform import aws_iam_role.table_role VisitorCounter_Role
+# terraform import aws_api_gateway_rest_api.api z3v2iubne2
+# terraform import aws_api_gateway_method.post_method z3v2iubne2/by9gf2juxc/POST
+# terraform import aws_api_gateway_method.options_method z3v2iubne2/by9gf2juxc/OPTIONS
+# terraform import aws_api_gateway_integration.lambda_integration z3v2iubne2/by9gf2juxc/POST
+# terraform import aws_api_gateway_integration.options_mock z3v2iubne2/by9gf2juxc/OPTIONS
+# terraform import aws_api_gateway_method_response.post_response z3v2iubne2/by9gf2juxc/POST/200
+# terraform import aws_api_gateway_method_response.options_response z3v2iubne2/by9gf2juxc/OPTIONS/200
+# terraform import aws_api_gateway_integration_response.post_integration_response z3v2iubne2/by9gf2juxc/POST/200
+# terraform import aws_api_gateway_integration_response.options_mock_response z3v2iubne2/by9gf2juxc/OPTIONS/200
+# terraform import aws_api_gateway_deployment.api_deployment z3v2iubne2/k7n2ch
+# terraform import aws_api_gateway_stage.api_stage z3v2iubne2/beta
+# terraform import aws_lambda_permission.apigw_lambda updateItem/3d15f824-5ab5-4252-b00d-74a119d02657
 #
 terraform {
   required_providers {
@@ -32,7 +44,7 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "tf_state" {
-  bucket = "terraform-state"
+  bucket = "terraform-state-jacehickman"
   force_destroy = true
 }
 
@@ -189,8 +201,10 @@ resource "aws_route53_zone" "my_dns" {
 resource "aws_dynamodb_table" "visitor_table" {
   name = "VisitorTable"
   hash_key = "visitor_id"
-  billing_mode = "PAY_PER_REQUEST"
-  
+  billing_mode = "PROVISIONED"
+  read_capacity = 1
+  write_capacity = 1
+
   attribute {
     name = "visitor_id"
     type = "N"
@@ -223,6 +237,10 @@ resource "aws_api_gateway_method_response" "post_response" {
   http_method = aws_api_gateway_method.post_method.http_method
   status_code = "200"
 
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Origin" = true
+  }
+  
   response_models = {
     "application/json" = "Empty"
   }
@@ -245,7 +263,7 @@ resource "aws_api_gateway_integration_response" "post_integration_response" {
 }
 
 resource "aws_lambda_permission" "apigw_lambda" {
-  statement_id  = "AllowAPIGatewayInvoke"
+  statement_id  = "3d15f824-5ab5-4252-b00d-74a119d02657"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.updateItem_py.function_name
   principal     = "apigateway.amazonaws.com"
@@ -301,18 +319,23 @@ resource "aws_api_gateway_integration_response" "options_mock_response" {
 
   response_parameters = {
     "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-    "method.response.header.Access-Control-Allow-Methods" = "'POST,OPTIONS'"
+    "method.response.header.Access-Control-Allow-Methods" = "'OPTIONS,POST'"
     "method.response.header.Access-Control-Allow-Origin"  = "'*'"
   }
 }
 
+resource "aws_api_gateway_stage" "api_stage" {
+  deployment_id = aws_api_gateway_deployment.api_deployment.id
+  rest_api_id   = aws_api_gateway_rest_api.api.id
+  stage_name    = "beta"
+}
+
 resource "aws_api_gateway_deployment" "api_deployment" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
   depends_on = [
     aws_api_gateway_integration.lambda_integration,
     aws_api_gateway_integration.options_mock
   ]
-  rest_api_id = aws_api_gateway_rest_api.api.id
-  stage_name  = "beta"
 }
 
 # IAM Role for Lambda Execution
