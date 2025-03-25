@@ -178,6 +178,13 @@ resource "aws_route53_zone" "my_dns" {
 
 resource "aws_dynamodb_table" "visitor_table" {
   name = "VisitorTable"
+  hash_key = "visitor_id"
+  billing_mode = "PAY_PER_REQUEST"
+  
+  attribute {
+    name = "visitor_id"
+    type = "N"
+  }
 }
 
 resource "aws_api_gateway_rest_api" "api" {
