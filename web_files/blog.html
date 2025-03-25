@@ -40,7 +40,9 @@
 
   <div>
     <h3>7. Javascript:</h3>
-    <p>I got stuck here for a bit because the only thing I knew about Javascript at the time was that it's a programming language. That's still mostly true today but for this step I made a counter.js script that incremented a Visitor Count every time the page was visited or refreshed, it wasn't great but it met the ask. Just like that, I had a website deployed that anyone could access. I considered this a big win because I had something tangible to talk about in interviews.</p>
+    <p>I got stuck here for a bit because the only thing I knew about Javascript at the time was that it's a programming language. That's still mostly true today but for this step I made a counter.js script that incremented a Visitor Count every time the page was visited or refreshed, it wasn't great but it met the ask. </p>
+    <p>Just like that, I had a website deployed that anyone could access. I considered this a big win because I had something tangible to talk about in interviews.</p>
+    <p>Here's the final javascript <a href="https://github.com/JaceHickman11/Cloud-Resume-Project/blob/main/web_files/javascript/counter.js">counter.js</a></p>
   </div>
 
   <div>
@@ -49,7 +51,7 @@
     <p>The challenge recommended making a Python script for the Lambda function, yet another language I'd never used at the time. The issues here began with attempting to update the item in DynamoDB. I gave up and decided to try just accessing the item. I eventually figured that out and moved on to actually updating it.</p>
     <p>I didn't understand I couldn't rename the script in Lambda from the default lambda_function.py without specifying a new handler. Also, I was getting incorrect schema errors because as I mentioned earlier, the DynamoDB table was storing 1 as a string, not a number.</p>
     <p>Finally, the internal testing I struggled a lot with. I was attempting to pass JSON to the script even though it needed no parameters to execute. I spent a ton of time trying to understand what the heck I was supposed to pass when really it was as simple as nothing: {}</p>
-    <p>Bam, tests passed and onto the API.</p>
+    <p>Bam, tests passed and onto the API. Here's the code for the function <a href="https://github.com/JaceHickman11/Cloud-Resume-Project/blob/main/lambda_function.py">lambda_function.py</a> </p>
     <p>The API is used to invoke the Lambda function. At this point, I felt very in over my head. I knew what an API was definitionally but not how it worked at all. Then I learned about CORS and that was a whole other mess.</p>
     <p>I used a POST method as recommended by the challenge. For the integration request to Lambda, I made a template passing {'visitor_id':'0'} to the function. For the integration response, my function already provides one so I opted to use that and made the response body map to $input.body.</p>
     <p>At this point the API was deployed, but I needed a method to test it. I couldn't get Javascript to work and was struggling to understand invocation. I asked ChatGPT for some assistance and it spit out some PowerShell that worked and my DynamoDB table was incrementing.</p>
@@ -76,17 +78,17 @@
     <p>I then went down the line defining each resource and would periodically run 'terraform plan' to see what was going to happen. I can't express enough how helpful this is. It clearly shows whether a resource would be deleted, changed, or added. I was going for no changes wherever possible and went back and forth until I got it right.</p>
     <p>I was finally ready to run my first 'terraform apply.' The 'terraform plan' output looked pretty good and... it fails. Who would've guessed deploying the entire backend didn't go as planned? Fortunately, my website was still up so I considered that good news.</p>
     <p>One large oversight was that I didn't import everything. I found this out by providing my terraform plan output to ChatGPT and it was like hey based on our history there's a bunch of stuff you haven't defined. This was confirmed because all of a sudden I had two APIs, another hosted domain in Route53, you get the idea.</p>
-    <p>Turns out if I import my API, for example, all the child configurations aren't also imported. I thought it was a package deal and I was mistaken. Long story short, you can see at the top of main.tf all the things I ended up importing. A few more 'terraform plan' and 'terraform apply' runs later, I worked through the errors and had my website deployed using Terraform!</p>
+    <p>Turns out if I import my API, for example, all the child configurations aren't also imported. I thought it was a package deal and I was mistaken. Long story short, you can see at the top of <a href="https://github.com/JaceHickman11/Cloud-Resume-Project/blob/main/terraform/main.tf">main.tf</a> all the things I ended up importing. A few more 'terraform plan' and 'terraform apply' runs later, I worked through the errors and had my website deployed using Terraform!</p>
   </div>
 
   <div>
     <h3>13-15. GitHub and CI/CD:</h3>
     <p>Next was to automate the process so when I changed code in my repository, my website frontend/backend was updated without me manually doing so. I used GitLab at work pretty often so I thought this was a breeze. It wasn't too bad, but I was actually really surprised to see how different the syntax was between the two.</p>
     <p>The challenge recommends a frontend and backend repository but I opted to not do this and just have a frontend and backend workflow to manage them. If the project was a giant codebase and had contributors other than myself, then maybe I'd reconsider. I kept it in one for ease of use.</p>
-    <p>I had to make some secrets for my AWS credentials so both workflows could use them. The backend workflow deploys Terraform, the frontend workflow deploys my website files and invalidates the CloudFront cache so content is up to date.</p>
+    <p>I had to make some secrets for my AWS credentials so both workflows could use them. The <a href="https://github.com/JaceHickman11/Cloud-Resume-Project/blob/main/.github/workflows/deploy-backend.yml">deploy-backend.yml</a> workflow deploys Terraform, the <a href="https://github.com/JaceHickman11/Cloud-Resume-Project/blob/main/.github/workflows/deploy-backend.yml">deploy-backend.yml</a> workflow deploys my website files and invalidates the CloudFront cache so content is up to date.</p>
     <p>I seemingly was finished. I pushed my changes up to remote but 'terraform apply' failed in my workflow. This posed the last big issue: my tfstate was local. All the stuff I just applied wasn't in remote which led to "How do I get it there?" Turns out putting tfstate in a public repository is a terrible idea.</p>
     <p>I came to learn that I could use AWS S3 to store my tfstate and configure it as my backend. I defined the resources for the backend in main.tf which included a S3 bucket for the literal tf_state and a table for the lock.</p>
-    <p>Once that was done, I made a backend.tf to tell Terraform this is where to look for your tf_state. I ran 'terraform init -reconfigure' and pushed my changes to remote. Both workflows passed, my website was up and running. The Cloud Resume Challenge was finally completed.</p>
+    <p>Once that was done, I made a <a href="https://github.com/JaceHickman11/Cloud-Resume-Project/blob/main/terraform/backend.tf">backend.tf</a> to tell Terraform this is where to look for your tf_state. I ran 'terraform init -reconfigure' and pushed my changes to remote. Both workflows passed, my website was up and running. The Cloud Resume Challenge was finally completed.</p>
   </div>
 
   <div>
