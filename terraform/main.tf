@@ -31,6 +31,22 @@ provider "aws" {
     region = "us-east-2"
 }
 
+resource "aws_s3_bucket" "tf_state" {
+  bucket = "terraform-state"
+  force_destroy = true
+}
+
+resource "aws_dynamodb_table" "tf_lock" {
+  name         = "terraform-locks"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "LockID"
+
+  attribute {
+    name = "LockID"
+    type = "S"
+  }
+}
+
 resource "aws_s3_bucket" "primary_bucket" {
   bucket = "jacehickman.com"
   force_destroy  = true
@@ -151,12 +167,6 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     default_ttl = 3600
     max_ttl = 86400  
     compress = true
-    forwarded_values {
-      query_string = false 
-      cookies {
-        forward = "none" 
-      }
-    }
   }
 
   restrictions {
@@ -227,6 +237,11 @@ resource "aws_api_gateway_integration_response" "post_integration_response" {
   response_parameters = {
     "method.response.header.Access-Control-Allow-Origin" = "'*'"
   }
+  depends_on = [
+    aws_api_gateway_method.post_method,
+    aws_api_gateway_method_response.post_response,
+    aws_api_gateway_integration.lambda_integration
+  ]
 }
 
 resource "aws_lambda_permission" "apigw_lambda" {
@@ -270,6 +285,12 @@ resource "aws_api_gateway_method_response" "options_response" {
   response_models = {
     "application/json" = "Empty"
   }
+
+  depends_on = [
+    aws_api_gateway_method.options_method,
+    aws_api_gateway_method_response.options_response,
+    aws_api_gateway_integration.options_mock
+  ]
 }
 
 resource "aws_api_gateway_integration_response" "options_mock_response" {
@@ -325,34 +346,4 @@ resource "aws_lambda_function" "updateItem_py" {
       TABLE_NAME = aws_dynamodb_table.visitor_table.name  
     }
   }
-}
-
-# data blocks only access the resource
-# data "aws_resource type" "resource_reference"
-data "aws_s3_bucket" "my_bucket" {
-    bucket = "jacehickman.com"
-}
-
-data "aws_cloudfront_distribution" "my_distribution" {
-    id = "E3EERE5S6HGZEH"
-}
-
-data "aws_route53_zone" "dns" {
-    name = "jacehickman.com"
-}
-
-data "aws_dynamodb_table" "visitor_table" {
-    name = "VisitorTable"
-}
-
-data "aws_api_gateway_rest_api" "api" {
-    name = "CloudResumeAPI"
-}
-
-data "aws_lambda_function" "updateItem_py" {
-    function_name = "updateItem"
-}
-
-data "aws_iam_role" "visitor_counter_role" {
-  name = "VisitorCounter_Role" 
 }
