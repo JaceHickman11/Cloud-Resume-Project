@@ -12,40 +12,30 @@
 </nav>
 
 <body>
-  <div>
+  <div class="card">
     <h2>Cloud Resume Challenge</h2>
     <h3>Overview:</h3>
     <p>This challenge asks you deploy a website as IaC hosted on a Cloud Provider of your choice. I went with Amazon Web Services and Terraform.</p>
     <p><a href="https://cloudresumechallenge.dev/docs/the-challenge/aws/">https://cloudresumechallenge.dev/docs/the-challenge/aws/</a></p>
-  </div>
 
-  <div>
     <h3>1. Certification:</h3>
     <p>I stumbled across this challenge on Reddit while pursuing my B.S. at WGU. I was still trying to land my first helpdesk job at this time and needed some side projects to speak to since I didn't have relevant work experience. This project in particular was interesting after I received my AWS Cloud Practitioner Certification. The certification was high-level and I wanted to see the technical side of it all.</p>
-  </div>
 
-  <div>
     <h3>2-3. HTML & CSS:</h3>
     <p>WGU also had a course on web development so I had a bit of experience here. But, I'm no web developer either. The goal here is to show my cloud skills so I didn't spend a ton of time on this part.</p>
-  </div>
 
-  <div>
     <h3>4-6. Static Website, HTTPS & DNS (S3 and Route53):</h3>
     <p>This is where the challenge really began. The web files are hosted on AWS S3 and I'd never interacted with it before. This part was fairly straightforward. AWS has great documentation and I generally followed the steps detailed here: <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/website-hosting-custom-domain-walkthrough.html">S3 Hosting Guide</a></p>
     <p>I created two buckets named jacehickman.com and www.jacehickman.com respectively. I configured them for public access and static website hosting.</p>
     <p>The challenge then asks you to use HTTPS for security. Security sounded great to me. Leaned on AWS documentation for this piece as well: <a href="https://aws.amazon.com/premiumsupport/knowledge-center/cloudfront-https-requests-s3/">CloudFront HTTPS Setup</a></p>
     <p>I obtained a certificate and edited the CloudFront Distribution behavior policy to redirect HTTP traffic to HTTPS.</p>
     <p>For DNS, I used Route53 to purchase my domain and made 7 DNS records in total. In short, all traffic is routed to https://jacehickman.com.</p>
-  </div>
 
-  <div>
     <h3>7. Javascript:</h3>
     <p>I got stuck here for a bit because the only thing I knew about Javascript at the time was that it's a programming language. That's still mostly true today but for this step I made a counter.js script that incremented a Visitor Count every time the page was visited or refreshed, it wasn't great but it met the ask. </p>
     <p>Just like that, I had a website deployed that anyone could access. I considered this a big win because I had something tangible to talk about in interviews.</p>
     <p>Here's the final javascript <a href="https://github.com/JaceHickman11/Cloud-Resume-Project/blob/main/web_files/javascript/counter.js">counter.js</a></p>
-  </div>
 
-  <div>
     <h3>8-11. Database, API, & Python (DynamoDB, API Gateway, & Lambda):</h3>
     <p>This immediately threw a wrench in my plans for the Javascript I just got working. The challenge presents this as three different parts which it is, but it all works in tandem so I bounced back and forth between services. I created a DynamoDB table called VisitorTable (among many others through troubleshooting). I couldn't get Lambda to update the table; I overlooked that I needed to specify string, binary, or number upon table creation.</p>
     <p>The challenge recommended making a Python script for the Lambda function, yet another language I'd never used at the time. The issues here began with attempting to update the item in DynamoDB. I gave up and decided to try just accessing the item. I eventually figured that out and moved on to actually updating it.</p>
@@ -55,9 +45,7 @@
     <p>The API is used to invoke the Lambda function. At this point, I felt very in over my head. I knew what an API was definitionally but not how it worked at all. Then I learned about CORS and that was a whole other mess.</p>
     <p>I used a POST method as recommended by the challenge. For the integration request to Lambda, I made a template passing {'visitor_id':'0'} to the function. For the integration response, my function already provides one so I opted to use that and made the response body map to $input.body.</p>
     <p>At this point the API was deployed, but I needed a method to test it. I couldn't get Javascript to work and was struggling to understand invocation. I asked ChatGPT for some assistance and it spit out some PowerShell that worked and my DynamoDB table was incrementing.</p>
-  </div>
 
-  <div>
     <h3>Hiatus & Return:</h3>
     <p>I actually put down the project for some time at this step because I landed my first IT job and was learning a ton at work. I moved from Helpdesk > Systems Administrator > Another Systems Administrator role > to my current role as an Automation Engineer. I learned all sorts of stuff along the way like Ansible, Git, Linux, and CI/CD Pipelines so I didn't feel the need to press on with the project.</p>
     <p>Eventually, work exposed me to Terraform and I considered picking it back up to learn since I knew Terraform was right around the corner for this project. After that hiatus, I decided to finish the project but found some difficulty because I had to relearn everything I pieced together but, fortunately had much more knowledge.</p>
@@ -67,9 +55,7 @@
     <p>The API response was nesting my lambda response in it's own body so I was struggling to access the visitor_count.</p>
     <p>This ended up being a problem with the API, I changed the integration request content handling to "passthrough" so Lambda passed as is, instead of as is the my API tossing some extra nesting on it.</p>
     <p>The website was basically completed at this point, a little sore on the eyes maybe but it was done. Now to completely "restart" and write it all as IaC.</p>
- </div>
 
-  <div>
     <h3>12. Infrastructure as Code (Terraform):</h3>
     <p>I had a couple choices here but opted for Terraform for the sole fact that it's available for use at work and I wanted to learn more about it. I set up Terraform on my RHEL9 VM and AWS CLI. Since Terraform was new, I went through their tutorial to get my feet wet and I can't recommend it enough: <a href="https://developer.hashicorp.com/terraform/tutorials/aws-get-started/infrastructure-as-code">Terraform Get Started</a></p>
     <p>AWS has great docs regarding Terraform I used heavily: <a href="https://registry.terraform.io/providers/hashicorp/aws/latest/docs">Terraform AWS Docs</a></p>
@@ -79,9 +65,7 @@
     <p>I was finally ready to run my first 'terraform apply.' The 'terraform plan' output looked pretty good and... it fails. Who would've guessed deploying the entire backend didn't go as planned? Fortunately, my website was still up so I considered that good news.</p>
     <p>One large oversight was that I didn't import everything. I found this out by providing my terraform plan output to ChatGPT and it was like hey based on our history there's a bunch of stuff you haven't defined. This was confirmed because all of a sudden I had two APIs, another hosted domain in Route53, you get the idea.</p>
     <p>Turns out if I import my API, for example, all the child configurations aren't also imported. I thought it was a package deal and I was mistaken. Long story short, you can see at the top of <a href="https://github.com/JaceHickman11/Cloud-Resume-Project/blob/main/terraform/main.tf">main.tf</a> all the things I ended up importing. A few more 'terraform plan' and 'terraform apply' runs later, I worked through the errors and had my website deployed using Terraform!</p>
-  </div>
 
-  <div>
     <h3>13-15. GitHub and CI/CD:</h3>
     <p>Next was to automate the process so when I changed code in my repository, my website frontend/backend was updated without me manually doing so. I used GitLab at work pretty often so I thought this was a breeze. It wasn't too bad, but I was actually really surprised to see how different the syntax was between the two.</p>
     <p>The challenge recommends a frontend and backend repository but I opted to not do this and just have a frontend and backend workflow to manage them. If the project was a giant codebase and had contributors other than myself, then maybe I'd reconsider. I kept it in one for ease of use.</p>
@@ -89,16 +73,12 @@
     <p>I seemingly was finished. I pushed my changes up to remote but 'terraform apply' failed in my workflow. This posed the last big issue: my tfstate was local. All the stuff I just applied wasn't in remote which led to "How do I get it there?" Turns out putting tfstate in a public repository is a terrible idea.</p>
     <p>I came to learn that I could use AWS S3 to store my tfstate and configure it as my backend. I defined the resources for the backend in main.tf which included a S3 bucket for the literal tf_state and a table for the lock.</p>
     <p>Once that was done, I made a <a href="https://github.com/JaceHickman11/Cloud-Resume-Project/blob/main/terraform/backend.tf">backend.tf</a> to tell Terraform this is where to look for your tf_state. I ran 'terraform init -reconfigure' and pushed my changes to remote. Both workflows passed, my website was up and running. The Cloud Resume Challenge was finally completed.</p>
-  </div>
 
-  <div>
     <h3>Final Thoughts:</h3>
     <p>I learned an incredible amount doing this project. I've done a few small side projects but nothing of this size. This project gives me something tangible to point to that I can produce results. It's also incredibly cheap to run. It costs me less than a dollar a month and I have to renew my domain annually.</p>
     <p>As for Terraform, it was interesting to learn. I use Ansible daily at work and I must say I'm not sold on Terraform. I believe it's a powerful tool but I haven't seen it solve something Ansible can't. Now, that's probably due to my lack of use with it but I initially thought it was cloud agnostic. I'd define my infrastructure and I could deploy it to AWS, GCP, Azure and whatever else.</p>
     <p>In hindsight, that seems like quite the undertaking. But I see how now that it's defined I could deploy this website in something like prod, dev, test without rewriting it all again. Overall, I'd recommend this challenge to anyone trying to learn IT or the Cloud. This exposes you to a whole slew of leading industry tools and everyone learns best by doing.</p>
-  </div>
 
-  <div>
     <h3>Resources:</h3>
     <ul>
       <li>AWS Documentation and Whitepapers... more than I can count or link here.</li>

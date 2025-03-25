@@ -1,9 +1,42 @@
 <!-- Cloud Resume Challenge -->
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
   <link rel="stylesheet" type="text/css" href="css/styles.css">
-  <!-- <link rel="stylesheet" type="text/css" href="styles.css"> -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    .contact-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .contact-label {
+      font-size: 16px;
+      color: #f3f3f3;
+      font-weight: 500;
+    }
+
+    .icon-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .icon-links a {
+      text-decoration: none;
+    }
+
+    .icon-links a i {
+      font-size: 20px;
+    }
+
+    header .contact-container {
+      background: none;
+      padding: 0;
+    }
+  </style>
 </head>
 
 <nav>
@@ -14,17 +47,29 @@
 <body>
 	<header>
 		<h1>Jace Hickman</h1>
-			<p>Colorado Springs, CO</p>	        
-    <a href="mailto:jace.bucklandhickman@gmail.com">jace.bucklandhickman@gmail.com</a>
-    <a href="https://www.linkedin.com/in/hickmanjace/">Connect with me on LinkedIn!</a>
-    <a href="https://github.com/JaceHickman11/">Connect with me on GitHub! --> https://github.com/</a>
+		<p>Colorado Springs, CO</p>
+    <div class="contact-container">
+      <p class="contact-label">Connect with me:</p>
+      <div class="icon-links">
+        <a href="mailto:jace.bucklandhickman@gmail.com" title="Email">
+          <i class="fas fa-envelope" style="color: #fff;"></i>
+        </a>
+        <a href="https://www.linkedin.com/in/hickmanjace/" title="LinkedIn" target="_blank">
+          <i class="fab fa-linkedin" style="color: #0e76a8;"></i>
+        </a>
+        <a href="https://github.com/JaceHickman11/" title="GitHub" target="_blank">
+          <i class="fab fa-github" style="color: #fff;"></i>
+        </a>
+      </div>
+    </div>
 	</header>
-  <div>
+
+  <div class="card">
     <h2><u>Summary</u></h2>
       <p>DevOps Engineer with 9+ years of experience supporting government contracts. I hold a B.S. in Information Technology and certifications such as CompTIA Security+, LPI Linux Essentials, and AWS Cloud Practitioner. Skilled in deploying, maintaining, and troubleshooting diverse systems, ensuring a robust IT infrastructure. Currently specializing in Ansible and CI/CD pipelines to deliver secure, automated solutions that streamline workflows and improve team efficiency.</p>
    </div>
 
-  <div>
+  <div class="card">
   <h2><u>Personal Projects</u></h2>
   <p>This website! Developed and deployed a personal website <a href="https://jacehickman.com">jacehickman.com</a> utilizing Amazon Web Services.</p>
   <p>The front and backend code that created this project can be found here: <a href="https://github.com/JaceHickman11/Cloud-Resume-Project">Cloud Resume Project</a></p>
@@ -32,7 +77,7 @@
   <p>Check out my <a href="https://jacehickman.com/blog.html">blog</a> for a deep dive on this project!</p>
 </div>
 
- <div>
+<div class="card">
   <h2><u>Work Experience</u></h2>
   <h3>DevOps Engineer</h3>
   <p>Insight Global</p>
@@ -62,7 +107,7 @@
   </ul>
 </div>
 
-<div>
+<div class="card">
   <h3>System Administrator</h3>
   <p>Ideal Innovations, Inc.</p>
   <p>April 2023 - September 2023</p>
@@ -86,7 +131,7 @@
   </ul>
 </div>
   
-<div>
+<div class="card">
   <h3>Program Analyst</h3>
   <p>6K Systems, Inc.</p>
   <p>December 2019 - June 2022</p>
@@ -99,7 +144,7 @@
   </ul>
 </div>
 
-<div>
+<div class="card">
   <h3>Radio Engineer</h3>
   <p>United States Air Force</p>
   <p>August 2015 - August 2019</p>
@@ -113,7 +158,7 @@
       </ul>
 </div>
 
-<div>
+<div class="card">
   <h2><u>Education and Certifications</u></h2>
 			<ul>
 				<li>Bachelor of Science, Information Technology, Western Governors University</li>

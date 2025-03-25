@@ -3,8 +3,9 @@
 body {
   margin: 0;
   font-family: 'Roboto', sans-serif;
-  font-size: 16px;
-  line-height: 1.6;
+  font-size: 17px;
+  line-height: 1.75;
+  letter-spacing: 0.3px;
   color: #333;
   background-color: #f8f9fa;
 }
@@ -12,9 +13,10 @@ body {
 header {
   background-color: #232f3e;
   color: #fff;
+  margin: 40px auto; 
   padding: 20px;
+  max-width: 1200px;
   text-align: center;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 header h1 {
@@ -30,57 +32,58 @@ header p, header a {
 }
 
 header a {
-  display: block;
   margin: 10px 0; 
   color: #00aaff;
   text-decoration: none;
   font-weight: 500;
+  transition: all 0.2s ease-in-out;
 }
 
 header a:hover {
   text-decoration: underline;
+  color: #ff9900;
 }
 
 a {
   color: #00aaff;
   font-weight: 400;
+  transition: all 0.2s ease-in-out;
 }
 
 a:hover {
   text-decoration: underline;
+  color: #ff9900;
 }
 
-div {
-  margin: 30px auto; 
-  padding: 0px;
-  max-width: 800px;
-  background-color: #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  padding: 20px;
+.card {
+  margin: 40px auto; 
+  padding: 30px;
+  max-width: 1200px;
+  background-color: #232f3e;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
 }
 
-
-div h2 {
+.card h2 {
   margin-top: 0;
   font-size: 28px;
   font-weight: 700;
-  color: #232f3e;
+  color: #fff;
 }
 
-div h3 {
+.card h3 {
   margin-top: 15px;
   font-size: 22px;
   font-weight: 500;
-  color: #333;
+  color: #fff;
 }
 
-div ul {
+.card ul {
   margin-top: 10px;
   padding-left: 20px;
 }
 
-div li {
+.card li {
   margin-bottom: 8px; 
   line-height: 1.8;
 }
@@ -107,6 +110,7 @@ a.button {
   text-decoration: none;
   font-weight: 600;
   margin-top: 20px;
+  transition: background-color 0.2s ease-in-out;
 }
 
 a.button:hover {
@@ -124,8 +128,47 @@ nav a {
   margin: 0 15px;
   text-decoration: none;
   font-weight: bold;
+  transition: all 0.2s ease-in-out;
 }
 
 nav a:hover {
   text-decoration: underline;
+  color: #ff9900;
+}
+
+.hero {
+  background: linear-gradient(to right, #232f3e, #3b4e66);
+  color: white;
+  padding: 60px 20px;
+  text-align: center;
+  border-radius: 0 0 20px 20px;
+}
+
+.hero h1 {
+  font-size: 48px;
+  margin-bottom: 10px;
+}
+
+.hero p {
+  font-size: 20px;
+  color: #ddd;
+}
+
+@media (max-width: 768px) {
+  header h1 {
+    font-size: 28px;
+  }
+
+  .hero h1 {
+    font-size: 32px;
+  }
+
+  .card {
+    padding: 5px;
+  }
+
+  nav a {
+    display: block;
+    margin: 10px 0;
+  }
 }
