@@ -4,43 +4,11 @@
 <head>
   <link rel="stylesheet" type="text/css" href="css/styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <style>
-    .contact-container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 15px;
-      margin-top: 20px;
-    }
-
-    .contact-label {
-      font-size: 16px;
-      color: #f3f3f3;
-      font-weight: 500;
-    }
-
-    .icon-links {
-      display: flex;
-      gap: 20px;
-    }
-
-    .icon-links a {
-      text-decoration: none;
-    }
-
-    .icon-links a i {
-      font-size: 20px;
-    }
-
-    header .contact-container {
-      background: none;
-      padding: 0;
-    }
-  </style>
 </head>
 
 <nav>
   <a href="resume.html">Resume</a>
+  <span class="nav-separator">|</span>
   <a href="blog.html">Blog</a>
 </nav>
 
@@ -49,17 +17,17 @@
 		<h1>Jace Hickman</h1>
 		<p>Colorado Springs, CO</p>
     <div class="contact-container">
-      <p class="contact-label">Connect with me:</p>
+      <span class="contact-label">Connect with me:</span>
       <div class="icon-links">
         <a href="mailto:jace.bucklandhickman@gmail.com" title="Email">
-          <i class="fas fa-envelope" style="color: #fff;"></i>
+          <i class="fas fa-envelope email-icon"></i>
         </a>
         <a href="https://www.linkedin.com/in/hickmanjace/" title="LinkedIn" target="_blank">
-          <i class="fab fa-linkedin" style="color: #0e76a8;"></i>
+          <i class="fab fa-linkedin linkedin-icon"></i>
         </a>
         <a href="https://github.com/JaceHickman11/" title="GitHub" target="_blank">
-          <i class="fab fa-github" style="color: #fff;"></i>
-        </a>
+          <i class="fab fa-github github-icon"></i>
+        </a>        
       </div>
     </div>
 	</header>
@@ -80,16 +48,15 @@
 <div class="card">
   <h2><u>Work Experience</u></h2>
   <h3>DevOps Engineer</h3>
-  <p>Insight Global</p>
-  <p>November 2024 - Present</p>
-  <p>Colorado Springs, Colorado</p>
+  <p><em>Insight Global - Colorado Springs, Colorado</em></p>
+  <p><em>November 2024 - Present</em></p>
   <p>DevOps Engineer for the Missile Defense Agency (MDA) maintaining the information systems needed to achieve missile defense objectives for combatant commanders.</p>
   <ul>
     <li>Implemented a scheduled CI/CD pipeline integrated with Ansible to automatically provision and update Windows VM pools.</li>
     <li>Deployed Mattermost Enterprise on Kubernetes in an airgapped environment using Helm, integrating LDAP/Active Directory authentication and configuring license management with Kubernetes secrets.</li>
   </ul>
   <h3>Systems Administrator II</h3>
-  <p>April 2024 - November 2024</p>
+  <p><em>April 2024 - November 2024</em></p>
   <ul>
     <li>Developed an Ansible playbook to automate domain user creation, disabling, and deletion across a multi-domain enterprise, with Jira integration for task tracking, reducing manual efforts and ensuring consistency.</li>
     <li>Designed a real-time NFS monitoring tool using GitLab CI/CD pipelines, automating storage tracking across multiple hosts and updating a website, providing end users with up-to-date visibility.</li>
@@ -98,7 +65,7 @@
     <li>Executed Ansible playbooks for creating Linux and Windows VMs in Nutanix, contributing to streamlined VM buildouts.</li>
   </ul>
   <h3>Systems Administrator I</h3>
-  <p>September 2023 - April 2024</p>
+  <p><em>September 2023 - April 2024</em></p>
   <ul>
     <li>Proactively manage RHEL servers to ensure the continuous availability of critical services and applications.</li>
     <li>Ensure access to archived data, providing cross-functional teams with insights to develop innovative applications and intelligence to external agencies.</li>
@@ -109,9 +76,8 @@
 
 <div class="card">
   <h3>System Administrator</h3>
-  <p>Ideal Innovations, Inc.</p>
-  <p>April 2023 - September 2023</p>
-  <p>Clarksburg, West Virginia</p>
+  <p><em>Ideal Innovations, Inc. - Clarksburg, West Virginia</em></p>
+  <p><em>April 2023 - September 2023</em></p>
   <p>IT support for the US Army Criminal Investigation Division (CID) Defense Forensic Science Center (DFSC) Biometrics Operations Directorate (BOD) ensuring 24/7 operations enabling users with near real time biometric information.</p>
   <ul>
     <li>Implement Security Technical Implementation Guides (STIGs) to ensure DoD infrastructure compliance.</li>
@@ -122,7 +88,7 @@
   </ul>
 
   <h3>Desktop Support</h3>
-  <p>June 2022 - April 2023</p>
+  <p><em>June 2022 - April 2023</em></p>
   <ul>
     <li>Promptly resolve requests for assistance for Windows 10, Office 365, VPN, and hardware issues.</li>
     <li>Deploy updates and applications to users through Microsoft Endpoint Configuration Manager (MECM).</li>
@@ -132,10 +98,9 @@
 </div>
   
 <div class="card">
-  <h3>Program Analyst</h3>
-  <p>6K Systems, Inc.</p>
-  <p>December 2019 - June 2022</p>
-  <p>Clarksburg, West Virginia</p>
+  <h3>Program Analyst - Clarksburg, West Virginia</h3>
+  <p><em>6K Systems, Inc.</em></p>
+  <p><em>December 2019 - June 2022</em></p>
   <p>Examiner for the Federal Bureau of Investigation's National Instant Criminal Background Check System (NICS) Operations Unit (NOU). Performed accurate research and analysis to determine a person’s eligibility to possess firearms per state and federal law.</p>
   <ul>
     <li>Outperform production standards at 2.25 transactions per hour – expectations are 1.5 per hour.</li>
@@ -145,10 +110,9 @@
 </div>
 
 <div class="card">
-  <h3>Radio Engineer</h3>
-  <p>United States Air Force</p>
-  <p>August 2015 - August 2019</p>
-  <p>Joint Base Andrews, MD / Yokota Air Base, Japan</p>
+  <h3>Radio Engineer - Joint Base Andrews, MD / Yokota Air Base, Japan</h3>
+  <p><em>United States Air Force</em></p>
+  <p><em>August 2015 - August 2019</em></p>
   <p>Install and maintain a variety of communications equipment to support base command and control (C2). HFGCS radio engineer supporting military operations of 13 global stations.</p>
   <ul>
     <li>Led 10 airmen in installing 29 vehicle radios which generated mobile C2 for Yokota aircraft refueling unit.</li> 
