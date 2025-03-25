@@ -6,6 +6,11 @@
   <!-- <link rel="stylesheet" type="text/css" href="styles.css"> -->
 </head>
 
+<nav>
+  <a href="resume.html">Resume</a>
+  <a href="blog.html">Blog</a>
+</nav>
+
 <body>
 	<header>
 		<h1>Jace Hickman</h1>
@@ -17,34 +22,30 @@
 	</header>
   <div>
     <h2><u>Summary</u></h2>
-      <p>Systems Administrator with an active Top Secret clearance and 9+ years experience supporting DoD and FBI projects. Holds a B.S. in IT and certifications in CompTIA Security+, LPI Linux Essentials, and AWS Cloud Practitioner. Skilled in deploying, maintaining, and troubleshooting diverse systems ensuring a robust IT infrastructure. Developing expertise in RHEL administration and automation.</p>
+      <p>DevOps Engineer with 9+ years of experience supporting government contracts. I hold a B.S. in Information Technology and certifications such as CompTIA Security+, LPI Linux Essentials, and AWS Cloud Practitioner. Skilled in deploying, maintaining, and troubleshooting diverse systems, ensuring a robust IT infrastructure. Currently specializing in Ansible and CI/CD pipelines to deliver secure, automated solutions that streamline workflows and improve team efficiency.</p>
    </div>
 
   <div>
   <h2><u>Personal Projects</u></h2>
-  <p>This website! Developed and deployed a personal website <a href="https://jacehickman.com">jacehickman.com</a> utilizing Amazon Web Services. The front and backend code that created this project can be found here: <a href="https://github.com/JaceHickman11">github.com/JaceHickman11</a></p>
+  <p>This website! Developed and deployed a personal website <a href="https://jacehickman.com">jacehickman.com</a> utilizing Amazon Web Services.</p>
+  <p>The front and backend code that created this project can be found here: <a href="https://github.com/JaceHickman11">github.com/JaceHickman11</a></p>
   <p>This project was inspired by the <a href="https://cloudresumechallenge.dev/docs/the-challenge/aws/">Cloud Resume Challenge</a></p>
- <ul>
-    <li>S3 - Hosts the web files HTML, CSS, and Javascript</li>
-    <li>Route 53 - DNS, route any http request to the https site. Purchased the domain with this service as well.</li>
-    <li>CloudFront - Content delivery, it ensures web content is given to the user at the closest AWS edge location to them.</li>
-    <li>API Gateway - API creation to access my Lambda function and DynamoDB table in AWS</li>
-    <li>DyanmoDB - The website has a "Page Views" in the top left. The current count is stored in a simple table using this service</li> 
-    <li>Lambda - Serverless computing platform. I host the lambda_function.py here. When the site is loaded, Javascript sends a POST request to the API which triggers the Lambda function. The function accesses my table in DynamoDB, increments the "Page Views:" count, and reports the updated value to the website.</li> 
-    <li>DyanmoDB - The website has a "Page Views" in the top left. The current count is stored in a simple table using this service</li> 
-    <li>DyanmoDB - The website has a "Page Views" in the top left. The current count is stored in a simple table using this service</li> 
-    <li>DyanmoDB - The website has a "Page Views" in the top left. The current count is stored in a simple table using this service</li> 
-  </ul>
-  <p>I'm currently focused on making this project Infrastructure as Code (IaC) using Terraform, step 12 of the challenge</p>
+  <p>Check out my <a href="https://jacehickman.com/blog.html">blog</a> for a deep dive on this project!</p>
 </div>
 
  <div>
   <h2><u>Work Experience</u></h2>
-  <h3>Systems Administrator II</h3>
+  <h3>DevOps Engineer</h3>
   <p>Insight Global</p>
-  <p>September 2023 - Present</p>
+  <p>November 2024 - Present</p>
   <p>Colorado Springs, Colorado</p>
-  <p>Systems Administrator for the Missile Defense Agency (MDA) maintaining the information systems needed to achieve missile defense objectives for combatant commanders.</p>
+  <p>DevOps Engineer for the Missile Defense Agency (MDA) maintaining the information systems needed to achieve missile defense objectives for combatant commanders.</p>
+  <ul>
+    <li>Implemented a scheduled CI/CD pipeline integrated with Ansible to automatically provision and update Windows VM pools.</li>
+    <li>Deployed Mattermost Enterprise on Kubernetes in an airgapped environment using Helm, integrating LDAP/Active Directory authentication and configuring license management with Kubernetes secrets.</li>
+  </ul>
+  <h3>Systems Administrator II</h3>
+  <p>April 2024 - November 2024</p>
   <ul>
     <li>Developed an Ansible playbook to automate domain user creation, disabling, and deletion across a multi-domain enterprise, with Jira integration for task tracking, reducing manual efforts and ensuring consistency.</li>
     <li>Designed a real-time NFS monitoring tool using GitLab CI/CD pipelines, automating storage tracking across multiple hosts and updating a website, providing end users with up-to-date visibility.</li>
@@ -123,6 +124,5 @@
 		</div>
   <div id="counter"></div>
 <script src="javascript/counter.js"></script>
-<!-- <script src="counter.js"></script> -->
 </body>
 </html>
