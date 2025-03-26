@@ -14,6 +14,11 @@
 # terraform import aws_s3_bucket_policy.www_bucket_policy www.jacehickman.com /
 # terraform import aws_cloudfront_distribution.s3_distribution E3EERE5S6HGZEH /
 # terraform import aws_route53_zone.my_dns Z07797793UO05BKPV64D2 /
+# terraform import aws_route53_record.root_a Z07797793UO05BKPV64D2_jacehickman.com._A /
+# terraform import aws_route53_record.root_aaaa Z07797793UO05BKPV64D2_jacehickman.com._AAAA /
+# terraform import aws_route53_record.www_a Z07797793UO05BKPV64D2_www.jacehickman.com._A /
+# terraform import aws_route53_record.acm_validation_root Z07797793UO05BKPV64D2__cef29cd4059092c98fac7dd45306cf95.jacehickman.com._CNAME /
+# terraform import aws_route53_record.acm_validation_www Z07797793UO05BKPV64D2__68c1ae93d3c6c01e143b71af9bd0b6fc.www.jacehickman.com._CNAME /
 # terraform import aws_dynamodb_table.visitor_table VisitorTable /
 # terraform import aws_lambda_function.updateItem_py updateItem /
 # terraform import aws_iam_role.table_role VisitorCounter_Role /
@@ -43,11 +48,13 @@ provider "aws" {
     region = "us-east-2"
 }
 
+# S3 bucket to host the tf_state
 resource "aws_s3_bucket" "tf_state" {
   bucket = "terraform-state-jacehickman"
   force_destroy = true
 }
 
+# DynamoDB table to lock the tf_state
 resource "aws_dynamodb_table" "tf_lock" {
   name         = "terraform-locks"
   billing_mode = "PAY_PER_REQUEST"
@@ -59,11 +66,13 @@ resource "aws_dynamodb_table" "tf_lock" {
   }
 }
 
+# S3 bucket to host the main website
 resource "aws_s3_bucket" "primary_bucket" {
   bucket = "jacehickman.com"
   force_destroy  = true
 }
 
+# Policy for the primary website to set index/error docs
 resource "aws_s3_bucket_website_configuration" "primary_website" {
   bucket = aws_s3_bucket.primary_bucket.id
 
@@ -76,6 +85,7 @@ resource "aws_s3_bucket_website_configuration" "primary_website" {
   }
 }
 
+# Allows public access to the wesbite
 resource "aws_s3_bucket_public_access_block" "primary_public_access" {
   bucket = aws_s3_bucket.primary_bucket.id
   block_public_acls       = false
@@ -84,6 +94,7 @@ resource "aws_s3_bucket_public_access_block" "primary_public_access" {
   restrict_public_buckets = false
 }
 
+# Public read policy for the primary bucket
 resource "aws_s3_bucket_policy" "primary_bucket_policy" {
   bucket = aws_s3_bucket.primary_bucket.id
   policy = jsonencode({
@@ -100,6 +111,7 @@ resource "aws_s3_bucket_policy" "primary_bucket_policy" {
   })
 }
 
+# CORS policy for the primary bucket allows GET and POST from my site
 resource "aws_s3_bucket_cors_configuration" "primary_bucket_cors" {
   bucket = aws_s3_bucket.primary_bucket.id
 
@@ -114,10 +126,12 @@ resource "aws_s3_bucket_cors_configuration" "primary_bucket_cors" {
   }
 }
 
+# www bucket for redirection to primary
 resource "aws_s3_bucket" "www_bucket" {
   bucket = "www.jacehickman.com"
 }
 
+# Redirects from www to https site
 resource "aws_s3_bucket_website_configuration" "www_website" {
   bucket = aws_s3_bucket.www_bucket.id
   redirect_all_requests_to {
@@ -126,6 +140,7 @@ resource "aws_s3_bucket_website_configuration" "www_website" {
   }
 }
 
+# Public access for www bucket
 resource "aws_s3_bucket_public_access_block" "www_public_access" {
   bucket = aws_s3_bucket.www_bucket.id
   block_public_acls       = false
@@ -134,6 +149,7 @@ resource "aws_s3_bucket_public_access_block" "www_public_access" {
   restrict_public_buckets = false
 }
 
+# Public read policy for www
 resource "aws_s3_bucket_policy" "www_bucket_policy" {
   bucket = aws_s3_bucket.www_bucket.id
   policy = jsonencode({
@@ -150,6 +166,8 @@ resource "aws_s3_bucket_policy" "www_bucket_policy" {
   })
 }
 
+# CloudFront for website content
+# Includes TLS cert
 resource "aws_cloudfront_distribution" "s3_distribution" {
   origin {
     domain_name = "jacehickman.com.s3-website.us-east-2.amazonaws.com"
@@ -194,10 +212,74 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   }
 }
 
+# DNS zone for my website
 resource "aws_route53_zone" "my_dns" {
   name = "jacehickman.com"
 }
 
+# A records for root and www buckets
+resource "aws_route53_record" "root_a" {
+  zone_id = aws_route53_zone.my_dns.zone_id
+  name    = "jacehickman.com"
+  type    = "A"
+
+  alias {
+    name = aws_cloudfront_distribution.s3_distribution.domain_name
+    zone_id = aws_cloudfront_distribution.s3_distribution.hosted_zone_id
+    evaluate_target_health = false
+  }
+}
+
+resource "aws_route53_record" "www_a" {
+  zone_id = aws_route53_zone.my_dns.zone_id
+  name    = "www.jacehickman.com"
+  type    = "A"
+
+  alias {
+    name                   = "d16yo3slw8eg5m.cloudfront.net"
+    zone_id                = "Z2FDTNDATAQYW2"
+    evaluate_target_health = false
+  }
+}
+
+# AAAA records for ipv6 support
+resource "aws_route53_record" "root_aaaa" {
+  zone_id = aws_route53_zone.my_dns.zone_id
+  name    = "jacehickman.com"
+  type    = "AAAA"
+
+  alias {
+    name                   = "d16yo3slw8eg5m.cloudfront.net"
+    zone_id                = "Z2FDTNDATAQYW2"
+    evaluate_target_health = false
+  }
+}
+
+# CNAME Records for TLS cert validation
+resource "aws_route53_record" "acm_validation_root" {
+  zone_id = aws_route53_zone.my_dns.zone_id
+  name    = "_cef29cd4059092c98fac7dd45306cf95.jacehickman.com"
+  type    = "CNAME"
+  ttl     = 300
+
+  records = [
+    "_bbd23e6d7204f1be8c423377d9e725c8.htgdxnmnnj.acm-validations.aws"
+  ]
+}
+
+resource "aws_route53_record" "acm_validation_www" {
+  zone_id = aws_route53_zone.my_dns.zone_id
+  name    = "_68c1ae93d3c6c01e143b71af9bd0b6fc.www.jacehickman.com"
+  type    = "CNAME"
+  ttl     = 300
+
+  records = [
+    "_154bbfe80fdedc0f1f81df2e81f0f799.htgdxnmnnj.acm-validations.aws"
+  ]
+}
+
+# DynamoDB table to store visitor_count
+# visitor_count is added by Lambda and doesn't need to be defined
 resource "aws_dynamodb_table" "visitor_table" {
   name = "VisitorTable"
   hash_key = "visitor_id"
@@ -211,17 +293,20 @@ resource "aws_dynamodb_table" "visitor_table" {
   }
 }
 
+# API Gateway to expose Lambda function
 resource "aws_api_gateway_rest_api" "api" {
   name = "CloudResumeAPI"
 }
 
+# POST method for Lambda
 resource "aws_api_gateway_method" "post_method" {
   rest_api_id   = aws_api_gateway_rest_api.api.id
   resource_id   = aws_api_gateway_rest_api.api.root_resource_id
   http_method   = "POST"
   authorization = "NONE"
 }
-
+ 
+# Integrate with Lambda
 resource "aws_api_gateway_integration" "lambda_integration" {
   rest_api_id             = aws_api_gateway_rest_api.api.id
   resource_id             = aws_api_gateway_rest_api.api.root_resource_id
@@ -231,6 +316,7 @@ resource "aws_api_gateway_integration" "lambda_integration" {
   uri                     = aws_lambda_function.updateItem_py.invoke_arn
 }
 
+# API response config
 resource "aws_api_gateway_method_response" "post_response" {
   rest_api_id = aws_api_gateway_rest_api.api.id
   resource_id = aws_api_gateway_rest_api.api.root_resource_id
@@ -246,6 +332,7 @@ resource "aws_api_gateway_method_response" "post_response" {
   }
 }
 
+# Integration response config
 resource "aws_api_gateway_integration_response" "post_integration_response" {
   rest_api_id = aws_api_gateway_rest_api.api.id
   resource_id = aws_api_gateway_rest_api.api.root_resource_id
@@ -262,6 +349,7 @@ resource "aws_api_gateway_integration_response" "post_integration_response" {
   ]
 }
 
+# Set permission so API can invoke Lambda
 resource "aws_lambda_permission" "apigw_lambda" {
   statement_id  = "3d15f824-5ab5-4252-b00d-74a119d02657"
   action        = "lambda:InvokeFunction"
@@ -270,6 +358,7 @@ resource "aws_lambda_permission" "apigw_lambda" {
   source_arn    = "${aws_api_gateway_rest_api.api.execution_arn}/*/*"
 }
 
+# OPTIONS method for CORS
 resource "aws_api_gateway_method" "options_method" {
   rest_api_id   = aws_api_gateway_rest_api.api.id
   resource_id   = aws_api_gateway_rest_api.api.root_resource_id
@@ -277,6 +366,7 @@ resource "aws_api_gateway_method" "options_method" {
   authorization = "NONE"
 }
 
+# Mock integrations for OPTIONS
 resource "aws_api_gateway_integration" "options_mock" {
   rest_api_id = aws_api_gateway_rest_api.api.id
   resource_id = aws_api_gateway_rest_api.api.root_resource_id
@@ -288,6 +378,7 @@ resource "aws_api_gateway_integration" "options_mock" {
   }
 }
 
+# Response method for OPTIONS
 resource "aws_api_gateway_method_response" "options_response" {
   rest_api_id = aws_api_gateway_rest_api.api.id
   resource_id = aws_api_gateway_rest_api.api.root_resource_id
@@ -311,11 +402,17 @@ resource "aws_api_gateway_method_response" "options_response" {
   ]
 }
 
+# Integration response for OPTIONS
 resource "aws_api_gateway_integration_response" "options_mock_response" {
   rest_api_id = aws_api_gateway_rest_api.api.id
   resource_id = aws_api_gateway_rest_api.api.root_resource_id
   http_method = aws_api_gateway_method.options_method.http_method
   status_code = "200"
+  
+  depends_on = [
+    aws_api_gateway_integration.options_mock,
+    aws_api_gateway_method_response.options_response
+  ]
 
   response_parameters = {
     "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
@@ -324,12 +421,14 @@ resource "aws_api_gateway_integration_response" "options_mock_response" {
   }
 }
 
+# Deploy the API to the stage beta
 resource "aws_api_gateway_stage" "api_stage" {
   deployment_id = aws_api_gateway_deployment.api_deployment.id
   rest_api_id   = aws_api_gateway_rest_api.api.id
   stage_name    = "beta"
 }
 
+# API gateway deployment
 resource "aws_api_gateway_deployment" "api_deployment" {
   rest_api_id = aws_api_gateway_rest_api.api.id
   depends_on = [
@@ -338,7 +437,7 @@ resource "aws_api_gateway_deployment" "api_deployment" {
   ]
 }
 
-# IAM Role for Lambda Execution
+# IAM Role for Lambda to access DynamoDB
 resource "aws_iam_role" "table_role" {
   name = "VisitorCounter_Role"
   description = "Managed by Terraform. Allows Lambda functions to call AWS services on your behalf."
@@ -356,6 +455,7 @@ resource "aws_iam_role" "table_role" {
   })
 }
 
+# Lambda function for update visitor count
 resource "aws_lambda_function" "updateItem_py" {
  function_name = "updateItem"  
   role = aws_iam_role.table_role.arn

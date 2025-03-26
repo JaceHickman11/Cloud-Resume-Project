@@ -2,7 +2,7 @@
 // API will execute a python script in lambda
 // Lamda will increment a database value a provide the new value to the counter
 
-const apiURL = 'https://z3v2iubne2.execute-api.us-east-2.amazonaws.com/beta'
+const apiURL = 'https://qbljrxdbu7.execute-api.us-east-2.amazonaws.com/beta'
 const updateCounter = async () => {
   try {
     // Send POST request to AWS API

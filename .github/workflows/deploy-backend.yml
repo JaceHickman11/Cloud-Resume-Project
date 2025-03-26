@@ -29,10 +29,10 @@ jobs:
           aws-region: us-east-2
 
       - name: Terraform Init
-        run: terraform -chdir=terraform init
+        run: terraform -chdir=terraform/aws init
   
       - name: Terraform Plan
-        run: terraform -chdir=terraform plan
+        run: terraform -chdir=terraform/aws plan
   
       - name: Terraform Apply
-        run: terraform -chdir=terraform apply -auto-approve
+        run: terraform -chdir=terraform/aws apply -auto-approve
