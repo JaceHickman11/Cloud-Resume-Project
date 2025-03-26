@@ -18,13 +18,20 @@ terraform/
 ├── local/      # Bootstrap phase – creates tfstate S3 bucket & DynamoDB lock table
 └── README.md   # This file
 
-```bash
-cd terraform/local
-terraform init
-terraform plan
-terraform apply
+# destory infra
 cd terraform/aws
-terraform init -reconfigure
-terraform plan
+terraform destroy
+# create the s3 state and lock table
+cd ../local/
+terraform init
 terraform apply
-aws s3 sync ./web_files s3://jacehickman.com --delete
+# apply the entire infra
+cd ../aws/
+terraform init --reconfigure
+terraform import aws_s3_bucket.tf_state terraform-state-jacehickman
+terraform import aws_dynamodb_table.tf_lock terraform-locks
+terraform apply
+# if failures it was likely a dependencies issue
+terraform state push errored.tfstate 
+terraform apply
+

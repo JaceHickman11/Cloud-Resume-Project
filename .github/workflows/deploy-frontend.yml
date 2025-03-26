@@ -20,11 +20,25 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-2
 
+      - name: Get CloudFront Distro ID and API_URL
+        run: |
+          cd terraform/aws
+          API_URL=$(terraform output -raw api_invoke_url)
+          CF_DIST_ID=$(terraform output -raw cloudfront_distribution_id)
+      
+          echo "API_URL=$API_URL" >> $GITHUB_ENV
+          echo "CF_DIST_ID=$CF_DIST_ID" >> $GITHUB_ENV
+
+      - name: Update counter.js with API URL
+        run: |
+          cd ../../
+          sed -i "s|const apiURL = .*|const apiURL = '$API_URL'|" javascript/counter.js
+
       - name: Deploy to S3
         run: aws s3 sync ./web_files s3://jacehickman.com --delete
 
       - name: Invalidate CloudFront Cache
         run: |
           aws cloudfront create-invalidation \
-            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --distribution-id "$CF_DIST_ID" \
             --paths "/*"
