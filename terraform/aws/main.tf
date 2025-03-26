@@ -119,8 +119,12 @@ resource "aws_s3_bucket_cors_configuration" "primary_bucket_cors" {
     allowed_headers = ["*"]
     allowed_methods = ["GET", "POST"]
     allowed_origins = [
+      "https://jacehickman.com",
+      "https://www.jacehickman.com",
       "http://jacehickman.com",
-      "https://www.jacehickman.com"
+      "http://www.jacehickman.com",
+      "jacehickman.com",
+      "www.jacehickman.com"
     ]
     expose_headers  = []
   }
