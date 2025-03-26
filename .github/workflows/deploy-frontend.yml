@@ -37,7 +37,7 @@ jobs:
 
       - name: Update counter.js with API URL
         run: |
-          cd ../../
+          cd ../../web_files
           sed -i "s|const apiURL = .*|const apiURL = '$API_URL'|" javascript/counter.js
 
       - name: Deploy to S3
