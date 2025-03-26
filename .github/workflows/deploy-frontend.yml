@@ -28,6 +28,7 @@ jobs:
       - name: Get CloudFront Distro ID and API_URL
         run: |
           cd terraform/aws
+          terraform init
           API_URL=$(terraform output -raw api_invoke_url)
           CF_DIST_ID=$(terraform output -raw cloudfront_distribution_id)
       
