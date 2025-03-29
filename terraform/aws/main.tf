@@ -232,6 +232,8 @@ resource "aws_route53_record" "root_a" {
     zone_id = aws_cloudfront_distribution.s3_distribution.hosted_zone_id
     evaluate_target_health = false
   }
+
+  depends_on = [aws_cloudfront_distribution.s3_distribution] 
 }
 
 resource "aws_route53_record" "www_a" {
@@ -240,10 +242,12 @@ resource "aws_route53_record" "www_a" {
   type    = "A"
 
   alias {
-    name                   = "d16yo3slw8eg5m.cloudfront.net"
-    zone_id                = "Z2FDTNDATAQYW2"
+    name = aws_cloudfront_distribution.s3_distribution.domain_name
+    zone_id = aws_cloudfront_distribution.s3_distribution.hosted_zone_id
     evaluate_target_health = false
   }
+
+  depends_on = [aws_cloudfront_distribution.s3_distribution] 
 }
 
 # AAAA records for ipv6 support
@@ -253,34 +257,37 @@ resource "aws_route53_record" "root_aaaa" {
   type    = "AAAA"
 
   alias {
-    name                   = "d16yo3slw8eg5m.cloudfront.net"
-    zone_id                = "Z2FDTNDATAQYW2"
+    name = aws_cloudfront_distribution.s3_distribution.domain_name
+    zone_id = aws_cloudfront_distribution.s3_distribution.hosted_zone_id
     evaluate_target_health = false
   }
+
+  depends_on = [aws_cloudfront_distribution.s3_distribution] 
 }
 
-# CNAME Records for TLS cert validation
-resource "aws_route53_record" "acm_validation_root" {
-  zone_id = aws_route53_zone.my_dns.zone_id
-  name    = "_cef29cd4059092c98fac7dd45306cf95.jacehickman.com"
-  type    = "CNAME"
-  ttl     = 300
 
-  records = [
-    "_bbd23e6d7204f1be8c423377d9e725c8.htgdxnmnnj.acm-validations.aws"
-  ]
-}
-
-resource "aws_route53_record" "acm_validation_www" {
-  zone_id = aws_route53_zone.my_dns.zone_id
-  name    = "_68c1ae93d3c6c01e143b71af9bd0b6fc.www.jacehickman.com"
-  type    = "CNAME"
-  ttl     = 300
-
-  records = [
-    "_154bbfe80fdedc0f1f81df2e81f0f799.htgdxnmnnj.acm-validations.aws"
-  ]
-}
+ # CNAME Records for TLS cert validation
+ resource "aws_route53_record" "acm_validation_root" {
+   zone_id = aws_route53_zone.my_dns.zone_id
+   name    = "_cef29cd4059092c98fac7dd45306cf95.jacehickman.com"
+   type    = "CNAME"
+   ttl     = 300
+ 
+   records = [
+     "_bbd23e6d7204f1be8c423377d9e725c8.htgdxnmnnj.acm-validations.aws"
+   ]
+ }
+ 
+ resource "aws_route53_record" "acm_validation_www" {
+   zone_id = aws_route53_zone.my_dns.zone_id
+   name    = "_68c1ae93d3c6c01e143b71af9bd0b6fc.www.jacehickman.com"
+   type    = "CNAME"
+   ttl     = 300
+ 
+   records = [
+     "_154bbfe80fdedc0f1f81df2e81f0f799.htgdxnmnnj.acm-validations.aws"
+   ]
+ }
 
 # DynamoDB table to store visitor_count
 # visitor_count is added by Lambda and doesn't need to be defined
@@ -344,7 +351,7 @@ resource "aws_api_gateway_integration_response" "post_integration_response" {
   status_code = "200"
 
   response_parameters = {
-    "method.response.header.Access-Control-Allow-Origin" = "'*'"
+    "method.response.header.Access-Control-Allow-Origin" = "'https://jacehickman.com', 'https://www.jacehickman.com', 'http://jacehickman.com', 'http://www.jacehickman.com', 'jacehickman.com', 'www.jacehickman.com'"
   }
   depends_on = [
     aws_api_gateway_method.post_method,
@@ -421,7 +428,7 @@ resource "aws_api_gateway_integration_response" "options_mock_response" {
   response_parameters = {
     "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
     "method.response.header.Access-Control-Allow-Methods" = "'OPTIONS,POST'"
-    "method.response.header.Access-Control-Allow-Origin"  = "'*'"
+    "method.response.header.Access-Control-Allow-Origin" = "'https://jacehickman.com', 'https://www.jacehickman.com', 'http://jacehickman.com', 'http://www.jacehickman.com', 'jacehickman.com', 'www.jacehickman.com'"
   }
 }
 
@@ -436,41 +443,63 @@ resource "aws_api_gateway_stage" "api_stage" {
 resource "aws_api_gateway_deployment" "api_deployment" {
   rest_api_id = aws_api_gateway_rest_api.api.id
   depends_on = [
+    aws_api_gateway_method.post_method,
+    aws_api_gateway_method_response.post_response,
     aws_api_gateway_integration.lambda_integration,
-    aws_api_gateway_integration.options_mock
+    aws_api_gateway_integration_response.post_integration_response,
+
+    aws_api_gateway_method.options_method,
+    aws_api_gateway_method_response.options_response,
+    aws_api_gateway_integration.options_mock,
+    aws_api_gateway_integration_response.options_mock_response,
   ]
 }
 
 # IAM Role for Lambda to access DynamoDB
-resource "aws_iam_role" "table_role" {
-  name = "VisitorCounter_Role"
-  description = "Managed by Terraform. Allows Lambda functions to call AWS services on your behalf."
+resource "aws_iam_role" "lambda_dynamodb_role" {
+  name = "lambda-dynamodb-access-role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
-    Statement = [
-      {
-        Action = "sts:AssumeRole"
-        Effect = "Allow"
-        Principal = {
-          Service = "lambda.amazonaws.com"
-        }
+    Statement = [{
+      Effect = "Allow"
+      Principal = {
+        Service = "lambda.amazonaws.com"
       }
-    ]
+      Action = "sts:AssumeRole"
+    }]
   })
 }
+
+resource "aws_iam_policy" "lambda_dynamodb_policy" {
+  name        = "lambda-dynamodb-access-policy"
+  description = "Allows Lambda functions to read/write VisitorTable"
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect = "Allow"
+      Action = [
+        "dynamodb:GetItem",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem"
+      ]
+      Resource = "arn:aws:dynamodb:us-east-2:*:table/VisitorTable"
+    }]
+  })
+}
+
+resource "aws_iam_policy_attachment" "lambda_dynamodb_attachment" {
+  name       = "lambda-dynamodb-policy-attachment"
+  roles      = [aws_iam_role.lambda_dynamodb_role.name]
+  policy_arn = aws_iam_policy.lambda_dynamodb_policy.arn
+}
+
 
 # Lambda function for update visitor count
 resource "aws_lambda_function" "updateItem_py" {
  function_name = "updateItem"  
-  role = aws_iam_role.table_role.arn
+  role = aws_iam_role.lambda_dynamodb_role.arn
   handler = "lambda_function.lambda_handler"
   runtime = "python3.10"
   filename = "${path.module}/lambda.zip"
   source_code_hash = filebase64sha256("${path.module}/lambda.zip")
-
-  environment {
-    variables = {
-      TABLE_NAME = aws_dynamodb_table.visitor_table.name  
-    }
-  }
 }

@@ -1,33 +1,39 @@
-// Update the counter element by sending a POST request to AWS API
-// API will execute a python script in lambda
-// Lamda will increment a database value a provide the new value to the counter
+// Update Page Views: by sending a POST request to AWS API
+// API forwards the request to AWS Lambda which executes a python script
+// Lambda increments a database value and provides the updated value to counter.js
 
 // apiURL is updated by deploy-frontend.yml in case the backend URL changes due to updates/destruction
 // sed -i "s|const apiURL = .*|const apiURL = '$API_URL'|" javascript/counter.js
-const apiURL = 'https://qbljrxdbu7.execute-api.us-east-2.amazonaws.com/beta'
+const apiURL = 'https://qbljrxdbu7.execute-api.us-east-2.amazonaws.com/beta';
+
 const updateCounter = async () => {
   try {
-    // Send POST request to AWS API
     const response = await fetch(apiURL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       }
     });
-    // Check for OK 200+
+
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
+
+    // Parse the JSON response from API
     const data = await response.json();
-    console.log(data);
-    // Parse API response as JSON
-    // Update counter element "Page Views on webpage"
-    const parsedBody  = JSON.parse(data.body);
-    const visitorCount = parsedBody['Updated visitor_count'];
-    document.getElementById('counter').innerText = `Page Views: ${visitorCount}`;
-    // Log error to console and display error msg on webpage
+    console.log("Full API Gateway Response:", data); 
+
+    // Extract visitor count 
+    const visitorCount = data['Updated visitor_count'];
+
+    if (visitorCount !== undefined) {
+      document.getElementById('counter').innerText = `Page Views: ${visitorCount}`;
+    } else {
+      throw new Error("Missing 'Updated visitor_count' in response.");
+    }
+
   } catch (error) {
-    console.error('Error:', error);
+    console.error("Error updating counter:", error);
     document.getElementById('counter').innerText = 'Error loading counter';
   }
 };
