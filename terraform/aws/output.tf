@@ -14,12 +14,21 @@ output "api_id" {
 }
 
 output "api_root_id" {
-  description = "API Gateway id"
+  description = "API Gateway root id"
   value       = aws_api_gateway_rest_api.api.root_resource_id
 }
 
 output "api_arn" {
-  description = "API Gateway id"
+  description = "API Gateway arn"
   value       = aws_api_gateway_rest_api.api.execution_arn
 }
 
+output "route53_hosted_zone_id" {
+  description = "Route 53 Hosted Zone ID"
+  value       = aws_route53_zone.my_dns.zone_id
+}
+
+output "cloudfront_hosted_zone_id" {
+  description = "Cloudfront Hosted Zone ID"
+  value       = aws_cloudfront_distribution.s3_distribution.id
+}

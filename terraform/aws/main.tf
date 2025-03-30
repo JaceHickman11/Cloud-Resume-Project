@@ -109,6 +109,7 @@ resource "aws_s3_bucket_policy" "primary_bucket_policy" {
       }
     ]
   })
+  depends_on = [ aws_s3_bucket_public_access_block.primary_public_access ]
 }
 
 # CORS policy for the primary bucket allows GET and POST from my site
@@ -118,14 +119,7 @@ resource "aws_s3_bucket_cors_configuration" "primary_bucket_cors" {
   cors_rule {
     allowed_headers = ["*"]
     allowed_methods = ["GET", "POST"]
-    allowed_origins = [
-      "https://jacehickman.com",
-      "https://www.jacehickman.com",
-      "http://jacehickman.com",
-      "http://www.jacehickman.com",
-      "jacehickman.com",
-      "www.jacehickman.com"
-    ]
+    allowed_origins = ["https://jacehickman.com"]
     expose_headers  = []
   }
 }
@@ -168,6 +162,7 @@ resource "aws_s3_bucket_policy" "www_bucket_policy" {
       }
     ]
   })
+  depends_on = [ aws_s3_bucket_public_access_block.primary_public_access ]
 }
 
 # CloudFront for website content
@@ -185,7 +180,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
       origin_keepalive_timeout = 5
     }
   }
-
+  # retain_on_delete = true
   aliases = ["jacehickman.com", "www.jacehickman.com"]
   enabled         = true
   is_ipv6_enabled = true
@@ -217,13 +212,13 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 }
 
 # DNS zone for my website
-resource "aws_route53_zone" "my_dns" {
+data "aws_route53_zone" "my_dns" {
   name = "jacehickman.com"
 }
 
 # A records for root and www buckets
 resource "aws_route53_record" "root_a" {
-  zone_id = aws_route53_zone.my_dns.zone_id
+  zone_id = data.aws_route53_zone.my_dns.zone_id
   name    = "jacehickman.com"
   type    = "A"
 
@@ -232,12 +227,10 @@ resource "aws_route53_record" "root_a" {
     zone_id = aws_cloudfront_distribution.s3_distribution.hosted_zone_id
     evaluate_target_health = false
   }
-
-  depends_on = [aws_cloudfront_distribution.s3_distribution] 
 }
 
 resource "aws_route53_record" "www_a" {
-  zone_id = aws_route53_zone.my_dns.zone_id
+  zone_id = data.aws_route53_zone.my_dns.zone_id
   name    = "www.jacehickman.com"
   type    = "A"
 
@@ -246,13 +239,11 @@ resource "aws_route53_record" "www_a" {
     zone_id = aws_cloudfront_distribution.s3_distribution.hosted_zone_id
     evaluate_target_health = false
   }
-
-  depends_on = [aws_cloudfront_distribution.s3_distribution] 
 }
 
 # AAAA records for ipv6 support
 resource "aws_route53_record" "root_aaaa" {
-  zone_id = aws_route53_zone.my_dns.zone_id
+  zone_id = data.aws_route53_zone.my_dns.zone_id
   name    = "jacehickman.com"
   type    = "AAAA"
 
@@ -261,14 +252,12 @@ resource "aws_route53_record" "root_aaaa" {
     zone_id = aws_cloudfront_distribution.s3_distribution.hosted_zone_id
     evaluate_target_health = false
   }
-
-  depends_on = [aws_cloudfront_distribution.s3_distribution] 
 }
 
 
  # CNAME Records for TLS cert validation
  resource "aws_route53_record" "acm_validation_root" {
-   zone_id = aws_route53_zone.my_dns.zone_id
+   zone_id = data.aws_route53_zone.my_dns.zone_id
    name    = "_cef29cd4059092c98fac7dd45306cf95.jacehickman.com"
    type    = "CNAME"
    ttl     = 300
@@ -279,7 +268,7 @@ resource "aws_route53_record" "root_aaaa" {
  }
  
  resource "aws_route53_record" "acm_validation_www" {
-   zone_id = aws_route53_zone.my_dns.zone_id
+   zone_id = data.aws_route53_zone.my_dns.zone_id
    name    = "_68c1ae93d3c6c01e143b71af9bd0b6fc.www.jacehickman.com"
    type    = "CNAME"
    ttl     = 300
@@ -351,7 +340,7 @@ resource "aws_api_gateway_integration_response" "post_integration_response" {
   status_code = "200"
 
   response_parameters = {
-    "method.response.header.Access-Control-Allow-Origin" = "'https://jacehickman.com', 'https://www.jacehickman.com', 'http://jacehickman.com', 'http://www.jacehickman.com', 'jacehickman.com', 'www.jacehickman.com'"
+    "method.response.header.Access-Control-Allow-Origin" = "'https://jacehickman.com'"
   }
   depends_on = [
     aws_api_gateway_method.post_method,
@@ -428,7 +417,7 @@ resource "aws_api_gateway_integration_response" "options_mock_response" {
   response_parameters = {
     "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
     "method.response.header.Access-Control-Allow-Methods" = "'OPTIONS,POST'"
-    "method.response.header.Access-Control-Allow-Origin" = "'https://jacehickman.com', 'https://www.jacehickman.com', 'http://jacehickman.com', 'http://www.jacehickman.com', 'jacehickman.com', 'www.jacehickman.com'"
+    "method.response.header.Access-Control-Allow-Origin" = "'https://jacehickman.com'"
   }
 }
 

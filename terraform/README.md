@@ -20,18 +20,18 @@ terraform/
 
 # destory infra
 cd terraform/aws
-terraform destroy
+terraform destroy -auto-approve
+# expect many errors because terraform is destroying the state file and lock
 # create the s3 state and lock table
 cd ../local/
 terraform init
-terraform apply
+terraform apply -auto-approve
 # apply the entire infra
 cd ../aws/
 terraform init --reconfigure
 terraform import aws_s3_bucket.tf_state terraform-state-jacehickman
 terraform import aws_dynamodb_table.tf_lock terraform-locks
-terraform apply
-# if failures it was likely a dependencies issue
-terraform state push errored.tfstate 
-terraform apply
+terraform import aws_cloudfront_distribution.s3_distribution EWQUVWWCU52WU
+terraform apply -auto-approve
+
 

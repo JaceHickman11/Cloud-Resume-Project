@@ -7,14 +7,7 @@ import json  # Handles JSON formatting
 import boto3  # AWS SDK to talk to DynamoDB
 
 def lambda_handler(event, context):
-
-    ALLOWED_ORIGINS =  ['https://jacehickman.com', 'https://www.jacehickman.com', 'http://jacehickman.com', 'http ://www.jacehickman.com', 'jacehickman.com', 'www.jacehickman.com']
-    origin = event.get('headers', {}).get('origin', '')  # Get origin from request headers
-    if origin in ALLOWED_ORIGINS:
-        cors_origin = origin  
-    else:
-        cors_origin = 'https://jacehickman.com'  # Default
-        
+ 
     try:
         # Print the entire event for debugging for CloudWatch logs
         print("Received event:", json.dumps(event, indent=2))
@@ -25,7 +18,7 @@ def lambda_handler(event, context):
             return {
                 'statusCode': 200,
                 'headers': {
-                    'Access-Control-Allow-Origin': 'cors_origin',  
+                    'Access-Control-Allow-Origin': 'https://jacehickman.com',  
                     'Access-Control-Allow-Methods': 'OPTIONS,POST',  
                     'Access-Control-Allow-Headers': 'Content-Type'  
                 },
@@ -62,7 +55,7 @@ def lambda_handler(event, context):
         return {
             'statusCode': 200,  
             'headers': {
-                'Access-Control-Allow-Origin': '*'  
+                'Access-Control-Allow-Origin': 'https://jacehickman.com'  
             },
             'body': json.dumps({'Updated visitor_count': new_value}) 
         }
@@ -73,7 +66,7 @@ def lambda_handler(event, context):
         return {
             'statusCode': 500,  
             'headers': {
-                'Access-Control-Allow-Origin': cors_origin 
+                'Access-Control-Allow-Origin': 'https://jacehickman.com' 
             },
             'body': json.dumps({'Error': str(e)})  # Return error message
         }
