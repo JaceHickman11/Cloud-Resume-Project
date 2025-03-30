@@ -4,7 +4,7 @@
 
 // apiURL is updated by deploy-frontend.yml in case the backend URL changes due to updates/destruction
 // sed -i "s|const apiURL = .*|const apiURL = '$API_URL'|" javascript/counter.js
-const apiURL = 'https://qbljrxdbu7.execute-api.us-east-2.amazonaws.com/beta';
+const apiURL = 'https://c0dal8s0dk.execute-api.us-east-2.amazonaws.com/beta';
 
 const updateCounter = async () => {
   try {
