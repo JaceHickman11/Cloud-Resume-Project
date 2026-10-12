@@ -1,136 +1,151 @@
 <!-- Cloud Resume Challenge -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jace Hickman | Resume</title>
   <link rel="stylesheet" type="text/css" href="css/styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="icon" type="image/png" href="images/android-chrome-192x192.png">
 </head>
 
-<nav>
-  <a href="resume.html">Resume</a>
-  <span class="nav-separator">|</span>
-  <a href="blog.html">Blog</a>
-</nav>
-
 <body>
-	<header>
-		<h1>Jace Hickman</h1>
-		<p>Colorado Springs, CO</p>
-    <div class="contact-container">
-      <span class="contact-label">Connect with me:</span>
-      <div class="icon-links">
-        <a href="mailto:jace.bucklandhickman@gmail.com" title="Email">
-          <i class="fas fa-envelope email-icon"></i>
-        </a>
-        <a href="https://www.linkedin.com/in/hickmanjace/" title="LinkedIn" target="_blank">
-          <i class="fab fa-linkedin linkedin-icon"></i>
-        </a>
-        <a href="https://github.com/JaceHickman11/" title="GitHub" target="_blank">
-          <i class="fab fa-github github-icon"></i>
-        </a>        
+  <nav class="site-nav">
+    <div class="nav-inner">
+      <a class="brand" href="resume.html">JH</a>
+      <div class="nav-links">
+        <a href="resume.html" class="active">Resume</a>
+        <span class="nav-separator">/</span>
+        <a href="blog.html">Blog</a>
       </div>
     </div>
-	</header>
+  </nav>
 
-  <div class="card">
-    <h2><u>Summary</u></h2>
-      <p>DevOps Engineer with 9+ years of experience supporting government contracts. I hold a B.S. in Information Technology and certifications such as CompTIA Security+, LPI Linux Essentials, and AWS Cloud Practitioner. Skilled in deploying, maintaining, and troubleshooting diverse systems ensuring a robust IT infrastructure. Currently specializing in Ansible and CI/CD pipelines to deliver secure, automated solutions that streamline workflows and improve team efficiency.</p>
-   </div>
+  <main class="page">
+    <header class="hero">
+      <p class="eyebrow">Platform Engineer</p>
+      <h1>Jace Hickman</h1>
+      <p class="location">Colorado Springs, CO</p>
+      <address class="contact-links">
+        <a href="tel:+13045129306">(304) 512-9306</a>
+        <a href="mailto:jace.bucklandhickman@gmail.com">jace.bucklandhickman@gmail.com</a>
+        <a href="https://www.linkedin.com/in/hickmanjace/" target="_blank" rel="noreferrer">LinkedIn</a>
+        <a href="https://github.com/JaceHickman11" target="_blank" rel="noreferrer">GitHub</a>
+        <a href="https://jacehickman.com">jacehickman.com</a>
+      </address>
+    </header>
 
-  <div class="card">
-  <h2><u>Personal Projects</u></h2>
-  <p>This website! Developed and deployed a personal website <a href="https://jacehickman.com">jacehickman.com</a> utilizing Amazon Web Services. The front and backend code that created this project can be found on GitHub here: <a href="https://github.com/JaceHickman11/Cloud-Resume-Project">Cloud Resume Project</a></p>
-  <p>This project was inspired by the <a href="https://cloudresumechallenge.dev/docs/the-challenge/aws/">Cloud Resume Challenge</a> Check out my <a href="https://jacehickman.com/blog.html">blog</a> for a deep dive on this project!</p>
-</div>
+    <div class="theme-picker" role="group" aria-label="Choose a color theme">
+      <span class="theme-label">Appearance</span>
+      <div class="theme-options">
+        <button type="button" class="theme-option" data-theme-choice="mineral" aria-pressed="true">Mineral</button>
+        <button type="button" class="theme-option" data-theme-choice="midnight" aria-pressed="false">Midnight</button>
+        <button type="button" class="theme-option" data-theme-choice="paper" aria-pressed="false">Paper</button>
+      </div>
+    </div>
 
-<div class="card">
-  <h2><u>Work Experience</u></h2>
-  <h3>DevOps Engineer</h3>
-  <p><em>Insight Global - Colorado Springs, Colorado</em></p>
-  <p><em>November 2024 - Present</em></p>
-  <p>DevOps Engineer for the Missile Defense Agency (MDA) maintaining the information systems needed to achieve missile defense objectives for combatant commanders.</p>
-  <ul>
-    <li>Implemented a scheduled CI/CD pipeline integrated with Ansible to automatically provision and update Windows VM pools.</li>
-    <li>Deployed Mattermost Enterprise on Kubernetes in an airgapped environment using Helm, integrating LDAP, and securing database credentials with secrets.</li>
-  </ul>
-  <h3>Systems Administrator II</h3>
-  <p><em>April 2024 - November 2024</em></p>
-  <ul>
-    <li>Developed an Ansible playbook to automate domain user creation, disabling, and deletion across a multi-domain enterprise, with Jira integration for task tracking, reducing manual efforts and ensuring consistency.</li>
-    <li>Designed a real-time NFS monitoring tool using GitLab CI/CD pipelines, automating storage tracking across multiple hosts and updating a website, providing end users with up-to-date visibility.</li>
-    <li>Enhanced existing Ansible playbooks by resolving bugs, improving  functionality, and optimizing performance.</li>
-    <li>Resolve user issues daily related to a wide range of hardware, software, and connectivity issues, ensuring minimal disruption.</li>
-    <li>Executed Ansible playbooks for creating Linux and Windows VMs in Nutanix, contributing to streamlined VM buildouts.</li>
-  </ul>
-  <h3>Systems Administrator I</h3>
-  <p><em>September 2023 - April 2024</em></p>
-  <ul>
-    <li>Proactively manage RHEL servers to ensure the continuous availability of critical services and applications.</li>
-    <li>Ensure access to archived data, providing cross-functional teams with insights to develop innovative applications and intelligence to external agencies.</li>
-    <li>Utilize Confluence as a knowledge base, regularly updating system configuration, procedures, and best practices.</li>
-    <li>Diagnose and resolve system issues, ensuring minimal downtime and optimizing performance.</li>
-  </ul>
-</div>
+    <section class="card" aria-labelledby="summary-title">
+      <h2 id="summary-title" class="section-title">Summary</h2>
+      <p>Platform Engineer with 11+ years of experience supporting critical government systems. Experienced in deploying and managing cloud platforms including OpenShift and Nutanix. Specializes in automation using Ansible, Kubernetes, Helm, and CI/CD pipelines. Holds a B.S. in IT, Security+, and AWS Cloud Practitioner. Currently pursuing an M.S. in Software Engineering (AI).</p>
+    </section>
 
-<div class="card">
-  <h3>System Administrator</h3>
-  <p><em>Ideal Innovations, Inc. - Clarksburg, West Virginia</em></p>
-  <p><em>April 2023 - September 2023</em></p>
-  <p>IT support for the US Army Criminal Investigation Division (CID) Defense Forensic Science Center (DFSC) Biometrics Operations Directorate (BOD) ensuring 24/7 operations enabling users with near real time biometric information.</p>
-  <ul>
-    <li>Implement Security Technical Implementation Guides (STIGs) to ensure DoD infrastructure compliance.</li>
-    <li>Remediate Tenable Nessus vulnerabilities ensuring a secure IT environment and maintaining compliance.</li>
-    <li>Configure and maintain a MECM server ensuring timely updates for clients and improving security.</li>
-    <li>Create and manage Group Policy Objects (GPOs) to enforce security settings and access controls.</li>
-    <li>Effectively manage Virtual Machine technologies (ESXi, VCenter, VSphere) to optimize resource utilization and ensure high availability.</li>
-  </ul>
+    <section class="card" aria-labelledby="experience-title">
+      <h2 id="experience-title" class="section-title">Work Experience</h2>
+      <article class="role">
+        <div class="role-heading">
+          <h3>Senior Platform Engineer</h3>
+          <p class="meta">Insight Global · Colorado Springs, CO <span>Jul 2025 - Current</span></p>
+        </div>
+        <p>Platform Engineer for the Missile Defense Agency (MDA) maintaining the IT systems needed to achieve missile defense objectives.</p>
+        <ul>
+          <li>Modernized enterprise automation by replacing VM-based Ansible installations with Ansible Execution Environments, enabling consistent execution, dependency isolation, and repeatable deployments.</li>
+          <li>Built a new enclave from the ground up, deploying Nutanix infrastructure, bootstrapping Kubernetes, and establishing core platform services such as Nexus, GitLab, and collaboration tools.</li>
+          <li>Led recovery from a major network outage, restoring critical services and Nutanix cluster availability, including reimaging and rejoining a failed node.</li>
+          <li>Migrated GitLab CI workloads to Kubernetes runners and standardized resource limits, non-root execution, workspace permissions, environment settings, and internal CA trust.</li>
+          <li>Migrated Nexus 2 to Nexus 3 HA and relocated Nexus across Kubernetes clusters with zero downtime.</li>
+          <li>Engineered Red Hat OpenShift capabilities, including ACM provisioning, LDAPS integration, NetApp Trident operator deployment for dynamic storage provisioning, and cluster observability.</li>
+          <li>Built a multi-source Grafana platform integrating OpenShift Thanos, Prometheus, Elastic, and external VM telemetry.</li>
+          <li>Automated VM monitoring with Ansible and NetBox, deploying node_exporter and dynamically generating Prometheus targets.</li>
+          <li>Served as Scrum Master for a 6-person team, facilitating sprint planning and aligning engineering efforts with mission objectives.</li>
+        </ul>
+      </article>
+      <article class="role">
+        <div class="role-heading">
+          <h3>Platform Engineer</h3>
+          <p class="meta"><span>Nov 2024 - Jul 2025</span></p>
+        </div>
+        <ul>
+          <li>Designed and implemented CI/CD pipelines integrated with Ansible to automate provisioning and lifecycle management of Windows VM pools, reducing deployment time and eliminating configuration drift.</li>
+          <li>Deployed and configured Mattermost on Kubernetes using Helm and an internal Nexus registry.</li>
+          <li>Maintained Omnissa Horizon infrastructure supporting reliable remote access to virtual desktops across multiple environments.</li>
+        </ul>
+      </article>
+      <article class="role">
+        <div class="role-heading">
+          <h3>Systems Engineer</h3>
+          <p class="meta"><span>Apr 2024 - Nov 2024</span></p>
+        </div>
+        <ul>
+          <li>Developed an Ansible playbook to automate domain user creation, disabling, and deletion across a multi-domain enterprise, with Jira integration for task tracking, reducing manual effort and ensuring consistency.</li>
+          <li>Designed a real-time NFS monitoring tool using GitLab CI/CD pipelines, automating storage tracking across multiple hosts.</li>
+          <li>Enhanced existing Ansible playbooks by resolving bugs, improving functionality, and optimizing performance.</li>
+        </ul>
+      </article>
+      <article class="role">
+        <div class="role-heading">
+          <h3>Systems Administrator</h3>
+          <p class="meta"><span>Sep 2023 - Apr 2024</span></p>
+        </div>
+        <ul>
+          <li>Ensured access to data, enabling cross-functional teams with insights to develop applications and intelligence.</li>
+          <li>Diagnosed and resolved system issues, ensuring minimal downtime and optimizing performance.</li>
+        </ul>
+      </article>
+      <article class="role">
+        <div class="role-heading">
+          <h3>Systems Administrator</h3>
+          <p class="meta">Ideal Innovations, Inc. · Clarksburg, WV <span>Jun 2022 - Sep 2023</span></p>
+        </div>
+        <p>Provided IT support for the US Army Criminal Investigation Division (CID), enabling users with near real-time biometric information.</p>
+      </article>
+      <article class="role">
+        <div class="role-heading">
+          <h3>Program Analyst</h3>
+          <p class="meta">6K Systems · Clarksburg, WV <span>Dec 2019 - Jun 2022</span></p>
+        </div>
+        <p>Analyst for the FBI's National Instant Criminal Background Check System (NICS) Operations Unit (NOU).</p>
+      </article>
+      <article class="role">
+        <div class="role-heading">
+          <h3>Radio Engineer</h3>
+          <p class="meta">United States Air Force <span>Aug 2015 - Aug 2019</span></p>
+        </div>
+        <p>Installed and maintained communications equipment supporting operations.</p>
+      </article>
+    </section>
 
-  <h3>Desktop Support</h3>
-  <p><em>June 2022 - April 2023</em></p>
-  <ul>
-    <li>Promptly resolve requests for assistance for Windows 10, Office 365, VPN, and hardware issues.</li>
-    <li>Deploy updates and applications to users through Microsoft Endpoint Configuration Manager (MECM).</li>
-    <li>Manage and maintain Active Directory user accounts, groups, and computers for an organization that includes 400 workstations and 150 local end users.</li>
-    <li>Execute PowerShell scripts to automate routine troubleshooting fixes and apply updates as necessary.</li>
-  </ul>
-</div>
-  
-<div class="card">
-  <h3>Program Analyst</h3>
-  <p><em>6K Systems, Inc. - Clarksburg, West Virginia</em></p>
-  <p><em>December 2019 - June 2022</em></p>
-  <p>Examiner for the Federal Bureau of Investigation's National Instant Criminal Background Check System (NICS) Operations Unit (NOU). Performed accurate research and analysis to determine a persons eligibility to possess firearms per state and federal law.</p>
-  <ul>
-    <li>Outperform production standards at 2.25 transactions per hour, expectations are 1.5 per hour.</li>
-    <li>Manage significant caseloads, totaling between 75-100 active cases.</li>
-    <li>Review incident reports and court documentation and evaluate if contents would prohibit firearms possession.</li>
-  </ul>
-</div>
+    <section class="card" aria-labelledby="projects-title">
+      <h2 id="projects-title" class="section-title">Personal Projects</h2>
+      <p>Developed and deployed a personal website on Amazon Web Services using Terraform and GitHub Actions for provisioning and CI/CD automation.</p>
+      <p><a href="https://github.com/JaceHickman11">github.com/JaceHickman11</a> · <a href="https://jacehickman.com">jacehickman.com</a></p>
+    </section>
 
-<div class="card">
-  <h3>Radio Engineer</h3>
-  <p><em>United States Air Force - Joint Base Andrews, MD / Yokota Air Base, Japan</em></p>
-  <p><em>August 2015 - August 2019</em></p>
-  <p>Install and maintain a variety of communications equipment to support base command and control (C2). HFGCS radio engineer supporting military operations of 13 global stations.</p>
-  <ul>
-    <li>Led 10 airmen in installing 29 vehicle radios which generated mobile C2 for Yokota aircraft refueling unit.</li> 
-    <li>Awarded Cyber Airman of the Month for leading 2 team members and installing 4 LMR packages supporting C3 for 23,000 aircraft missions.</li>
-    <li>Assited execution of a $2.4 million LMR technical refresh by upgrading 2,500 radios and eliminating 1,000 obsolete devices which boosted radio coverage by 30%.</li>
-    <li>Performed preventative maintenance and troubleshooting for 42 HF radios and supporting equipment providing 24/7 nuclear communication, command, and control (C3) for WHCA, US Navy 7th Fleet, and 31 DoD agencies. </li>
+    <section class="card" aria-labelledby="education-title">
+      <h2 id="education-title" class="section-title">Education and Certifications</h2>
+      <ul>
+        <li>Master of Science, Software Engineering - AI Engineering, <em>Western Governors University</em>, projected 2027</li>
+        <li>Bachelor of Science, Information Technology, <em>Western Governors University</em>, 2022</li>
+        <li>CompTIA Security+ ce, Network+ ce, A+ ce, and Project+</li>
+        <li>AWS Certified Cloud Practitioner</li>
       </ul>
-</div>
+    </section>
 
-<div class="card">
-  <h2><u>Education and Certifications</u></h2>
-			<ul>
-				<li>Bachelor of Science - Information Technology, <em>Western Governors University</em></li>
-				<li>CompTIA Security+ ce, Network+ ce, A+ ce, and Project+</li>
-        <li>LPI Linux Essentials</li>
-		    <li>AWS Certified Cloud Practitioner</li>
-			</ul>
-		</div>
-  <div id="counter"></div>
-<script src="javascript/counter.js"></script>
+    <footer class="page-footer">
+      <div id="counter" class="counter"></div>
+    </footer>
+  </main>
+  <script src="javascript/theme.js"></script>
+  <script src="javascript/counter.js"></script>
 </body>
 </html>
