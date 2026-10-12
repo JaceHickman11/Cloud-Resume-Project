@@ -395,11 +395,6 @@ resource "aws_api_gateway_method_response" "options_response" {
     "application/json" = "Empty"
   }
 
-  depends_on = [
-    aws_api_gateway_method.options_method,
-    aws_api_gateway_method_response.options_response,
-    aws_api_gateway_integration.options_mock
-  ]
 }
 
 # Integration response for OPTIONS
@@ -431,6 +426,43 @@ resource "aws_api_gateway_stage" "api_stage" {
 # API gateway deployment
 resource "aws_api_gateway_deployment" "api_deployment" {
   rest_api_id = aws_api_gateway_rest_api.api.id
+  triggers = {
+    redeployment = sha1(jsonencode({
+      post_method = {
+        http_method   = aws_api_gateway_method.post_method.http_method
+        authorization = aws_api_gateway_method.post_method.authorization
+      }
+      post_integration = {
+        type                    = aws_api_gateway_integration.lambda_integration.type
+        integration_http_method = aws_api_gateway_integration.lambda_integration.integration_http_method
+        uri                     = aws_api_gateway_integration.lambda_integration.uri
+      }
+      post_method_response = {
+        response_parameters = aws_api_gateway_method_response.post_response.response_parameters
+        response_models     = aws_api_gateway_method_response.post_response.response_models
+      }
+      post_integration_response = {
+        status_code         = aws_api_gateway_integration_response.post_integration_response.status_code
+        response_parameters = aws_api_gateway_integration_response.post_integration_response.response_parameters
+      }
+      options_method = {
+        http_method   = aws_api_gateway_method.options_method.http_method
+        authorization = aws_api_gateway_method.options_method.authorization
+      }
+      options_integration = {
+        type              = aws_api_gateway_integration.options_mock.type
+        request_templates = aws_api_gateway_integration.options_mock.request_templates
+      }
+      options_method_response = {
+        response_parameters = aws_api_gateway_method_response.options_response.response_parameters
+        response_models     = aws_api_gateway_method_response.options_response.response_models
+      }
+      options_integration_response = {
+        status_code         = aws_api_gateway_integration_response.options_mock_response.status_code
+        response_parameters = aws_api_gateway_integration_response.options_mock_response.response_parameters
+      }
+    }))
+  }
   depends_on = [
     aws_api_gateway_method.post_method,
     aws_api_gateway_method_response.post_response,
@@ -442,6 +474,10 @@ resource "aws_api_gateway_deployment" "api_deployment" {
     aws_api_gateway_integration.options_mock,
     aws_api_gateway_integration_response.options_mock_response,
   ]
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 # IAM Role for Lambda to access DynamoDB
