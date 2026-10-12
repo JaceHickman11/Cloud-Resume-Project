@@ -45,12 +45,12 @@ terraform {
 }
 
 provider "aws" {
-    region = "us-east-2"
+  region = "us-east-2"
 }
 
 # S3 bucket to host the tf_state
 resource "aws_s3_bucket" "tf_state" {
-  bucket = "terraform-state-jacehickman"
+  bucket        = "terraform-state-jacehickman"
   force_destroy = true
 }
 
@@ -68,8 +68,8 @@ resource "aws_dynamodb_table" "tf_lock" {
 
 # S3 bucket to host the main website
 resource "aws_s3_bucket" "primary_bucket" {
-  bucket = "jacehickman.com"
-  force_destroy  = true
+  bucket        = "jacehickman.com"
+  force_destroy = true
 }
 
 # Policy for the primary website to set index/error docs
@@ -77,17 +77,17 @@ resource "aws_s3_bucket_website_configuration" "primary_website" {
   bucket = aws_s3_bucket.primary_bucket.id
 
   index_document {
-    suffix = "resume.html"  
+    suffix = "resume.html"
   }
 
   error_document {
-    key = "error.html" 
+    key = "error.html"
   }
 }
 
 # Allows public access to the wesbite
 resource "aws_s3_bucket_public_access_block" "primary_public_access" {
-  bucket = aws_s3_bucket.primary_bucket.id
+  bucket                  = aws_s3_bucket.primary_bucket.id
   block_public_acls       = false
   block_public_policy     = false
   ignore_public_acls      = false
@@ -101,15 +101,15 @@ resource "aws_s3_bucket_policy" "primary_bucket_policy" {
     Version = "2012-10-17",
     Statement = [
       {
-        Sid       = "PublicReadGetObject",         
-        Effect    = "Allow",                   
-        Principal = "*",                           
-        Action    = "s3:GetObject",                
-        Resource  = "${aws_s3_bucket.primary_bucket.arn}/*" 
+        Sid       = "PublicReadGetObject",
+        Effect    = "Allow",
+        Principal = "*",
+        Action    = "s3:GetObject",
+        Resource  = "${aws_s3_bucket.primary_bucket.arn}/*"
       }
     ]
   })
-  depends_on = [ aws_s3_bucket_public_access_block.primary_public_access ]
+  depends_on = [aws_s3_bucket_public_access_block.primary_public_access]
 }
 
 # CORS policy for the primary bucket allows GET and POST from my site
@@ -133,14 +133,14 @@ resource "aws_s3_bucket" "www_bucket" {
 resource "aws_s3_bucket_website_configuration" "www_website" {
   bucket = aws_s3_bucket.www_bucket.id
   redirect_all_requests_to {
-    host_name = "jacehickman.com"  
-    protocol  = "https"           
+    host_name = "jacehickman.com"
+    protocol  = "https"
   }
 }
 
 # Public access for www bucket
 resource "aws_s3_bucket_public_access_block" "www_public_access" {
-  bucket = aws_s3_bucket.www_bucket.id
+  bucket                  = aws_s3_bucket.www_bucket.id
   block_public_acls       = false
   block_public_policy     = false
   ignore_public_acls      = false
@@ -154,15 +154,15 @@ resource "aws_s3_bucket_policy" "www_bucket_policy" {
     Version = "2012-10-17",
     Statement = [
       {
-        Sid       = "PublicReadGetObject",         
-        Effect    = "Allow",                   
-        Principal = "*",                           
-        Action    = "s3:GetObject",                
-        Resource  = "${aws_s3_bucket.www_bucket.arn}/*" 
+        Sid       = "PublicReadGetObject",
+        Effect    = "Allow",
+        Principal = "*",
+        Action    = "s3:GetObject",
+        Resource  = "${aws_s3_bucket.www_bucket.arn}/*"
       }
     ]
   })
-  depends_on = [ aws_s3_bucket_public_access_block.primary_public_access ]
+  depends_on = [aws_s3_bucket_public_access_block.primary_public_access]
 }
 
 # CloudFront for website content
@@ -170,32 +170,32 @@ resource "aws_s3_bucket_policy" "www_bucket_policy" {
 resource "aws_cloudfront_distribution" "s3_distribution" {
   origin {
     domain_name = "jacehickman.com.s3-website.us-east-2.amazonaws.com"
-    origin_id = "jacehickman.com.s3-website.us-east-2.amazonaws.com"
+    origin_id   = "jacehickman.com.s3-website.us-east-2.amazonaws.com"
     custom_origin_config {
-      http_port = 80
-      https_port = 443
-      origin_protocol_policy = "http-only"
-      origin_ssl_protocols = ["TLSv1.2"]
-      origin_read_timeout = 30
+      http_port                = 80
+      https_port               = 443
+      origin_protocol_policy   = "http-only"
+      origin_ssl_protocols     = ["TLSv1.2"]
+      origin_read_timeout      = 30
       origin_keepalive_timeout = 5
     }
   }
   # retain_on_delete = true
-  aliases = ["jacehickman.com", "www.jacehickman.com"]
-  enabled         = true
-  is_ipv6_enabled = true
+  aliases             = ["jacehickman.com", "www.jacehickman.com"]
+  enabled             = true
+  is_ipv6_enabled     = true
   default_root_object = "resume.html"
 
   default_cache_behavior {
-    cache_policy_id = "658327ea-f89d-4fab-a63d-7e88639e58f6"
-    allowed_methods  = ["GET", "HEAD"]  
-    cached_methods   = ["GET", "HEAD"]  
-    target_origin_id = "jacehickman.com.s3-website.us-east-2.amazonaws.com"
-    viewer_protocol_policy = "redirect-to-https" 
-    min_ttl = 0
-    default_ttl = 3600
-    max_ttl = 86400  
-    compress = true
+    cache_policy_id        = "658327ea-f89d-4fab-a63d-7e88639e58f6"
+    allowed_methods        = ["GET", "HEAD"]
+    cached_methods         = ["GET", "HEAD"]
+    target_origin_id       = "jacehickman.com.s3-website.us-east-2.amazonaws.com"
+    viewer_protocol_policy = "redirect-to-https"
+    min_ttl                = 0
+    default_ttl            = 3600
+    max_ttl                = 86400
+    compress               = true
   }
 
   restrictions {
@@ -205,8 +205,8 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   }
 
   viewer_certificate {
-    acm_certificate_arn = var.acm_certificate_arn
-    ssl_support_method = "sni-only"
+    acm_certificate_arn      = var.acm_certificate_arn
+    ssl_support_method       = "sni-only"
     minimum_protocol_version = "TLSv1.2_2021"
   }
 }
@@ -223,8 +223,8 @@ resource "aws_route53_record" "root_a" {
   type    = "A"
 
   alias {
-    name = aws_cloudfront_distribution.s3_distribution.domain_name
-    zone_id = aws_cloudfront_distribution.s3_distribution.hosted_zone_id
+    name                   = aws_cloudfront_distribution.s3_distribution.domain_name
+    zone_id                = aws_cloudfront_distribution.s3_distribution.hosted_zone_id
     evaluate_target_health = false
   }
 }
@@ -235,8 +235,8 @@ resource "aws_route53_record" "www_a" {
   type    = "A"
 
   alias {
-    name = aws_cloudfront_distribution.s3_distribution.domain_name
-    zone_id = aws_cloudfront_distribution.s3_distribution.hosted_zone_id
+    name                   = aws_cloudfront_distribution.s3_distribution.domain_name
+    zone_id                = aws_cloudfront_distribution.s3_distribution.hosted_zone_id
     evaluate_target_health = false
   }
 }
@@ -248,43 +248,43 @@ resource "aws_route53_record" "root_aaaa" {
   type    = "AAAA"
 
   alias {
-    name = aws_cloudfront_distribution.s3_distribution.domain_name
-    zone_id = aws_cloudfront_distribution.s3_distribution.hosted_zone_id
+    name                   = aws_cloudfront_distribution.s3_distribution.domain_name
+    zone_id                = aws_cloudfront_distribution.s3_distribution.hosted_zone_id
     evaluate_target_health = false
   }
 }
 
 
- # CNAME Records for TLS cert validation
- resource "aws_route53_record" "acm_validation_root" {
-   zone_id = data.aws_route53_zone.my_dns.zone_id
-   name    = "_cef29cd4059092c98fac7dd45306cf95.jacehickman.com"
-   type    = "CNAME"
-   ttl     = 300
- 
-   records = [
-     "_bbd23e6d7204f1be8c423377d9e725c8.htgdxnmnnj.acm-validations.aws"
-   ]
- }
- 
- resource "aws_route53_record" "acm_validation_www" {
-   zone_id = data.aws_route53_zone.my_dns.zone_id
-   name    = "_68c1ae93d3c6c01e143b71af9bd0b6fc.www.jacehickman.com"
-   type    = "CNAME"
-   ttl     = 300
- 
-   records = [
-     "_154bbfe80fdedc0f1f81df2e81f0f799.htgdxnmnnj.acm-validations.aws"
-   ]
- }
+# CNAME Records for TLS cert validation
+resource "aws_route53_record" "acm_validation_root" {
+  zone_id = data.aws_route53_zone.my_dns.zone_id
+  name    = "_cef29cd4059092c98fac7dd45306cf95.jacehickman.com"
+  type    = "CNAME"
+  ttl     = 300
+
+  records = [
+    "_bbd23e6d7204f1be8c423377d9e725c8.htgdxnmnnj.acm-validations.aws"
+  ]
+}
+
+resource "aws_route53_record" "acm_validation_www" {
+  zone_id = data.aws_route53_zone.my_dns.zone_id
+  name    = "_68c1ae93d3c6c01e143b71af9bd0b6fc.www.jacehickman.com"
+  type    = "CNAME"
+  ttl     = 300
+
+  records = [
+    "_154bbfe80fdedc0f1f81df2e81f0f799.htgdxnmnnj.acm-validations.aws"
+  ]
+}
 
 # DynamoDB table to store visitor_count
 # visitor_count is added by Lambda and doesn't need to be defined
 resource "aws_dynamodb_table" "visitor_table" {
-  name = "VisitorTable"
-  hash_key = "visitor_id"
-  billing_mode = "PROVISIONED"
-  read_capacity = 1
+  name           = "VisitorTable"
+  hash_key       = "visitor_id"
+  billing_mode   = "PROVISIONED"
+  read_capacity  = 1
   write_capacity = 1
 
   attribute {
@@ -305,7 +305,7 @@ resource "aws_api_gateway_method" "post_method" {
   http_method   = "POST"
   authorization = "NONE"
 }
- 
+
 # Integrate with Lambda
 resource "aws_api_gateway_integration" "lambda_integration" {
   rest_api_id             = aws_api_gateway_rest_api.api.id
@@ -408,7 +408,7 @@ resource "aws_api_gateway_integration_response" "options_mock_response" {
   resource_id = aws_api_gateway_rest_api.api.root_resource_id
   http_method = aws_api_gateway_method.options_method.http_method
   status_code = "200"
-  
+
   depends_on = [
     aws_api_gateway_integration.options_mock,
     aws_api_gateway_method_response.options_response
@@ -417,7 +417,7 @@ resource "aws_api_gateway_integration_response" "options_mock_response" {
   response_parameters = {
     "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
     "method.response.header.Access-Control-Allow-Methods" = "'OPTIONS,POST'"
-    "method.response.header.Access-Control-Allow-Origin" = "'https://jacehickman.com'"
+    "method.response.header.Access-Control-Allow-Origin"  = "'https://jacehickman.com'"
   }
 }
 
@@ -485,10 +485,10 @@ resource "aws_iam_policy_attachment" "lambda_dynamodb_attachment" {
 
 # Lambda function for update visitor count
 resource "aws_lambda_function" "updateItem_py" {
- function_name = "updateItem"  
-  role = aws_iam_role.lambda_dynamodb_role.arn
-  handler = "lambda_function.lambda_handler"
-  runtime = "python3.10"
-  filename = "${path.module}/lambda.zip"
+  function_name    = "updateItem"
+  role             = aws_iam_role.lambda_dynamodb_role.arn
+  handler          = "lambda_function.lambda_handler"
+  runtime          = "python3.10"
+  filename         = "${path.module}/lambda.zip"
   source_code_hash = filebase64sha256("${path.module}/lambda.zip")
 }
