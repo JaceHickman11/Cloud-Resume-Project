@@ -416,6 +416,24 @@ resource "aws_api_gateway_integration_response" "options_mock_response" {
   }
 }
 
+resource "aws_api_gateway_gateway_response" "default_4xx" {
+  rest_api_id   = aws_api_gateway_rest_api.api.id
+  response_type = "DEFAULT_4XX"
+
+  response_parameters = {
+    "gatewayresponse.header.Access-Control-Allow-Origin" = "'https://jacehickman.com'"
+  }
+}
+
+resource "aws_api_gateway_gateway_response" "default_5xx" {
+  rest_api_id   = aws_api_gateway_rest_api.api.id
+  response_type = "DEFAULT_5XX"
+
+  response_parameters = {
+    "gatewayresponse.header.Access-Control-Allow-Origin" = "'https://jacehickman.com'"
+  }
+}
+
 # Deploy the API to the stage beta
 resource "aws_api_gateway_stage" "api_stage" {
   deployment_id = aws_api_gateway_deployment.api_deployment.id
@@ -461,6 +479,12 @@ resource "aws_api_gateway_deployment" "api_deployment" {
         status_code         = aws_api_gateway_integration_response.options_mock_response.status_code
         response_parameters = aws_api_gateway_integration_response.options_mock_response.response_parameters
       }
+      default_4xx = {
+        response_parameters = aws_api_gateway_gateway_response.default_4xx.response_parameters
+      }
+      default_5xx = {
+        response_parameters = aws_api_gateway_gateway_response.default_5xx.response_parameters
+      }
     }))
   }
   depends_on = [
@@ -473,6 +497,8 @@ resource "aws_api_gateway_deployment" "api_deployment" {
     aws_api_gateway_method_response.options_response,
     aws_api_gateway_integration.options_mock,
     aws_api_gateway_integration_response.options_mock_response,
+    aws_api_gateway_gateway_response.default_4xx,
+    aws_api_gateway_gateway_response.default_5xx,
   ]
 
   lifecycle {
