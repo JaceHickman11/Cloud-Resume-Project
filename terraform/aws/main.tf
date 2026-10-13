@@ -423,6 +423,10 @@ resource "aws_api_gateway_gateway_response" "default_4xx" {
   response_parameters = {
     "gatewayresponse.header.Access-Control-Allow-Origin" = "'https://jacehickman.com'"
   }
+
+  response_templates = {
+    "application/json" = "{\"message\":$context.error.messageString}"
+  }
 }
 
 resource "aws_api_gateway_gateway_response" "default_5xx" {
@@ -431,6 +435,10 @@ resource "aws_api_gateway_gateway_response" "default_5xx" {
 
   response_parameters = {
     "gatewayresponse.header.Access-Control-Allow-Origin" = "'https://jacehickman.com'"
+  }
+
+  response_templates = {
+    "application/json" = "{\"message\":$context.error.messageString}"
   }
 }
 
@@ -563,14 +571,4 @@ resource "aws_cloudwatch_log_group" "lambda" {
 import {
   to = aws_cloudwatch_log_group.lambda
   id = "/aws/lambda/updateItem"
-}
-
-resource "aws_cloudwatch_log_group" "api_gateway" {
-  name              = "API-Gateway-Execution-Logs_${aws_api_gateway_rest_api.api.id}/${aws_api_gateway_stage.api_stage.stage_name}"
-  retention_in_days = 7
-}
-
-import {
-  to = aws_cloudwatch_log_group.api_gateway
-  id = "API-Gateway-Execution-Logs_c0dal8s0dk/beta"
 }
