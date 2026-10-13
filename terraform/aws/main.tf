@@ -554,3 +554,23 @@ resource "aws_lambda_function" "updateItem_py" {
   filename         = "${path.module}/lambda.zip"
   source_code_hash = filebase64sha256("${path.module}/lambda.zip")
 }
+
+resource "aws_cloudwatch_log_group" "lambda" {
+  name              = "/aws/lambda/updateItem"
+  retention_in_days = 7
+}
+
+import {
+  to = aws_cloudwatch_log_group.lambda
+  id = "/aws/lambda/updateItem"
+}
+
+resource "aws_cloudwatch_log_group" "api_gateway" {
+  name              = "API-Gateway-Execution-Logs_${aws_api_gateway_rest_api.api.id}/${aws_api_gateway_stage.api_stage.stage_name}"
+  retention_in_days = 7
+}
+
+import {
+  to = aws_cloudwatch_log_group.api_gateway
+  id = "API-Gateway-Execution-Logs_c0dal8s0dk/beta"
+}
